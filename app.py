@@ -106,10 +106,11 @@ def index():
     next_month = (today.replace(day=1) + timedelta(days=32)).strftime("%Y-%m")
 
     events = []
+    today_str = today.strftime("%Y-%m-%d")
     for event_type, schedule in SCHEDULE_2026.items():
         for event in schedule:
-            event_month = event["date"][:7]
-            if event_month in [current_month, next_month]:
+            # 今日以降のイベントのみ表示
+            if event["date"] >= today_str:
                 events.append({
                     "type": event_type.upper(),
                     "date": event["date"],
@@ -117,6 +118,8 @@ def index():
                 })
 
     events.sort(key=lambda x: x["date"])
+    # 直近10件に制限
+    events = events[:10]
 
     return render_template('index.html',
                          today=today.strftime("%Y-%m-%d"),
@@ -206,16 +209,28 @@ def vip_quotes_page():
     # サンプルデータ（後でJSONファイル化可能）
     investor_quotes = [
         {
-            "name": "ウォーレン・バフェット",
-            "title": "バークシャー・ハサウェイ CEO",
-            "emoji": "🧙‍♂️",
-            "date": "2026-01-25",
+            "name": "ラリー・フィンク",
+            "title": "ブラックロック CEO",
+            "emoji": "🏛️",
+            "date": "2026-01-23",
             "event": "ダボス会議",
-            "quote": "現在の市場は過熱気味だ。我々は現金ポジションを増やしている。良い投資機会を待っている。",
+            "quote": "インフラと民間市場への投資機会は拡大している。長期投資家にとって好機だ。",
+            "stance": "bullish",
+            "market_impact": "BLK +1.5%",
+            "color": "pop-blue",
+            "color2": "pop-purple"
+        },
+        {
+            "name": "ジェイミー・ダイモン",
+            "title": "JPモルガン CEO",
+            "emoji": "🏦",
+            "date": "2026-01-23",
+            "event": "ダボス会議",
+            "quote": "地政学的リスクは過小評価されている。企業は備えが必要だ。",
             "stance": "cautious",
-            "market_impact": "S&P500 -0.5%",
-            "color": "pop-purple",
-            "color2": "pop-blue"
+            "market_impact": None,
+            "color": "pop-red",
+            "color2": "pop-pink"
         },
         {
             "name": "レイ・ダリオ",
@@ -240,18 +255,6 @@ def vip_quotes_page():
             "market_impact": "ARKK +2.3%",
             "color": "pop-green",
             "color2": "pop-cyan"
-        },
-        {
-            "name": "ジェイミー・ダイモン",
-            "title": "JPモルガン CEO",
-            "emoji": "🏦",
-            "date": "2026-01-23",
-            "event": "ダボス会議",
-            "quote": "地政学的リスクは過小評価されている。企業は備えが必要だ。",
-            "stance": "cautious",
-            "market_impact": None,
-            "color": "pop-red",
-            "color2": "pop-pink"
         }
     ]
 
