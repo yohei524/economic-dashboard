@@ -13,34 +13,58 @@
         </div>
     </div>
 
-    <!-- カテゴリタブ -->
-    <div class="flex flex-wrap gap-2">
-        <button class="px-4 py-2 rounded-full bg-gradient-to-r from-pop-purple to-pop-pink text-white font-bold text-sm">
-            すべて
-        </button>
-        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
-            🧙‍♂️ 投資家
-        </button>
-        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
-            🏛️ 政治家
-        </button>
-        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
-            🌐 ダボス会議
-        </button>
-        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
-            📊 機関投資家
-        </button>
+    <!-- バフェット銘柄分析 -->
+    {% if buffett_analysis %}
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-purple/30 bg-gradient-to-br from-pop-purple/5 to-pop-blue/5">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-black text-gray-800 flex items-center gap-2">
+                <span class="text-2xl">🧙‍♂️</span>
+                バフェット銘柄分析
+            </h2>
+            <span class="text-xs bg-gradient-to-r from-pop-purple to-pop-blue text-white px-3 py-1 rounded-full font-bold">
+                13F最新
+            </span>
+        </div>
+        <p class="text-gray-600 text-sm mb-4">
+            バークシャー・ハサウェイの13Fファイリングから読み解くバフェットの投資戦略
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="p-4 rounded-2xl bg-white/50">
+                <p class="text-gray-500 text-sm">現金ポジション</p>
+                <p class="text-2xl font-black text-pop-purple">{{ buffett_analysis.cash_position }}</p>
+                <p class="text-pop-orange text-xs mt-1">🔥 {{ buffett_analysis.cash_trend }}</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white/50">
+                <p class="text-gray-500 text-sm">Apple売却</p>
+                <p class="text-lg font-bold text-gray-800">{{ buffett_analysis.apple_sold }}</p>
+                <p class="text-gray-500 text-xs mt-1">{{ buffett_analysis.apple_reason }}</p>
+            </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-pop-green/10 border border-pop-green/30 mb-4">
+            <p class="text-gray-700">
+                <span class="font-bold text-pop-green">📈 新規購入:</span> {{ buffett_analysis.new_position }}
+            </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-pop-yellow/10 border border-pop-yellow/30">
+            <p class="text-pop-orange text-sm font-medium">
+                💡 {{ buffett_analysis.message }}
+            </p>
+        </div>
     </div>
+    {% endif %}
 
     <!-- 注目の投資家セクション -->
     <div class="glass-card rounded-3xl p-6 shadow-lg">
         <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
-            <span class="text-2xl">🧙‍♂️</span>
-            注目の投資家
+            <span class="text-2xl">🏦</span>
+            注目の投資家・CEO発言
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for quote in investor_quotes %}
-            <div class="p-4 rounded-2xl bg-gradient-to-br from-{{ quote.color }}/5 to-{{ quote.color2 }}/5 border border-{{ quote.color }}/20 hover:shadow-md transition-shadow">
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 hover:shadow-md transition-shadow">
                 <div class="flex items-center gap-3 mb-3">
                     <span class="text-4xl">{{ quote.emoji }}</span>
                     <div>
@@ -68,14 +92,14 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-black text-gray-800 flex items-center gap-2">
                 <span class="text-2xl">🏛️</span>
-                議員トレード追跡
+                ペロシ銘柄トラッカー
             </h2>
             <span class="text-xs bg-gradient-to-r from-pop-pink to-pop-purple text-white px-3 py-1 rounded-full font-bold">
                 🔥 HOT
             </span>
         </div>
         <p class="text-gray-600 text-sm mb-4">
-            米国では議員の株式取引が公開義務。特にナンシー・ペロシ元下院議長の夫ポール・ペロシ氏の取引は「ペロシトレード」として注目されています。
+            ナンシー・ペロシ元下院議長の夫ポール氏の取引。2024年は<span class="font-bold text-pop-pink">+70.9%</span>のリターン（S&P500は+24.9%）。STOCK法により45日以内の開示義務あり。
         </p>
 
         <div class="space-y-3">
@@ -105,10 +129,55 @@
             {% endfor %}
         </div>
 
-        <div class="mt-4 p-3 rounded-xl bg-pop-yellow/10 border border-pop-yellow/30">
-            <p class="text-pop-orange text-sm">
-                ⚠️ 議員の取引は45日以内に開示義務あり。開示時点では既に株価が動いている可能性があります。
+        <div class="mt-4 p-3 rounded-xl bg-pop-blue/10 border border-pop-blue/30">
+            <p class="text-pop-blue text-sm font-medium">
+                📊 追跡ツール: <a href="https://www.capitoltrades.com" target="_blank" class="underline">Capitol Trades</a>、<a href="https://unusualwhales.com/politics" target="_blank" class="underline">Unusual Whales</a>、<a href="https://www.quiverquant.com/congresstrading/" target="_blank" class="underline">Quiver Quantitative</a>
             </p>
+        </div>
+
+        <div class="mt-3 p-3 rounded-xl bg-pop-yellow/10 border border-pop-yellow/30">
+            <p class="text-pop-orange text-sm">
+                ⚠️ 議員取引ETF: <span class="font-bold">NANC</span>（民主党）、<span class="font-bold">KRUZ/GOP</span>（共和党）で議員の取引をコピー可能。2024年NANCは+26.8%。
+            </p>
+        </div>
+    </div>
+
+    <!-- 注目の議員トレーダー -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">🏆</span>
+            注目の議員トレーダー
+        </h2>
+        <p class="text-gray-500 text-sm mb-4">2024年にS&P500を上回った議員48人のうち特に注目される人物</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-yellow/10 to-pop-orange/10 border border-pop-yellow/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">🏈</span>
+                    <p class="font-bold text-gray-800">トミー・タバービル</p>
+                </div>
+                <p class="text-xs text-gray-500">上院議員（共和党）</p>
+                <p class="text-2xl font-black text-pop-orange mt-2">+179%</p>
+                <p class="text-xs text-gray-600 mt-1">2024年最高リターン。連邦住宅金融公社株で達成。1,334件の取引実績。</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-blue/10 to-pop-purple/10 border border-pop-blue/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">🛡️</span>
+                    <p class="font-bold text-gray-800">マイケル・マコール</p>
+                </div>
+                <p class="text-xs text-gray-500">下院議員（共和党）</p>
+                <p class="text-lg font-bold text-gray-800 mt-2">TSMC +94%</p>
+                <p class="text-xs text-gray-600 mt-1">国土安全保障・外交委員会所属。防衛・半導体株に強み。TikTok禁止法案の著者でMeta保有。</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-green/10 to-pop-cyan/10 border border-pop-green/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-2xl">📈</span>
+                    <p class="font-bold text-gray-800">デビッド・ローザー</p>
+                </div>
+                <p class="text-xs text-gray-500">下院議員（共和党）</p>
+                <p class="text-2xl font-black text-pop-green mt-2">+149%</p>
+                <p class="text-xs text-gray-600 mt-1">NVDA、Mastercard、Visa保有。長期保有で大幅上昇。</p>
+            </div>
         </div>
     </div>
 
@@ -146,7 +215,7 @@
             <span class="text-2xl">📊</span>
             機関投資家の動向
         </h2>
-        <p class="text-gray-500 text-sm mb-4">大手ヘッジファンド・年金基金のポジション</p>
+        <p class="text-gray-500 text-sm mb-4">大手ヘッジファンド・年金基金のポジション（13Fファイリングより）</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for fund in hedge_funds %}
@@ -186,22 +255,20 @@
     <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-blue/30 bg-gradient-to-br from-pop-blue/5 to-pop-cyan/5">
         <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
             <span class="text-2xl">📋</span>
-            13Fファイリング
+            13Fファイリングとは
         </h2>
         <p class="text-gray-600 text-sm mb-4">
-            米国では運用資産1億ドル以上の機関投資家は四半期ごとに保有銘柄を開示する義務があります（13Fレポート）。バフェットのバークシャー・ハサウェイなども対象。
+            米国では運用資産1億ドル以上の機関投資家は四半期ごとに保有銘柄を開示する義務があります（13Fレポート）。45日のタイムラグがありますが、大口投資家の動向を把握できる貴重な情報源です。
         </p>
-        <div class="p-4 rounded-2xl bg-white/50">
+        <div class="p-4 rounded-2xl bg-white/50 mb-4">
             <p class="text-gray-700 text-sm">
                 <span class="font-bold">次回開示期限:</span> 2026年2月14日（2025年Q4分）
             </p>
         </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">バークシャー・ハサウェイ</span>
-            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ブリッジウォーター</span>
-            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ルネサンス・テクノロジーズ</span>
-            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">シタデル</span>
-            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ツーシグマ</span>
+        <div class="p-3 rounded-xl bg-pop-blue/10 border border-pop-blue/30">
+            <p class="text-pop-blue text-sm font-medium">
+                📊 確認サイト: <a href="https://whalewisdom.com" target="_blank" class="underline">WhaleWisdom</a>、<a href="https://www.gurufocus.com" target="_blank" class="underline">GuruFocus</a>、<a href="https://13f.info" target="_blank" class="underline">13F.info</a>
+            </p>
         </div>
     </div>
 </div>
