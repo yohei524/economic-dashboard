@@ -258,8 +258,7 @@ def vip_quotes_page():
         }
     ]
 
-    # ペロシ銘柄（実際の開示データに基づく）
-    # 出典: Quiver Quantitative, Capitol Trades, Pelosi Tracker
+    # ペロシ銘柄（STOCK Act開示情報）
     pelosi_trades = [
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -268,8 +267,7 @@ def vip_quotes_page():
             "action": "buy",
             "ticker": "NVDA",
             "company": "エヌビディア",
-            "amount": "コールオプション50枚 $150行使価格 $250K-$500K",
-            "note": "2026年4月満期。ポートフォリオの19%がNVDA"
+            "amount": "コールオプション50枚"
         },
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -278,8 +276,7 @@ def vip_quotes_page():
             "action": "buy",
             "ticker": "TEM",
             "company": "Tempus AI",
-            "amount": "コールオプション50枚 $20行使価格",
-            "note": "購入8日後にAIアプリ発表→株価+35%"
+            "amount": "コールオプション50枚"
         },
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -287,9 +284,8 @@ def vip_quotes_page():
             "date": "2025-01-13",
             "action": "buy",
             "ticker": "VST",
-            "company": "Vistra Corp（原子力発電）",
-            "amount": "コールオプション50枚 $50行使価格",
-            "note": "AI向けデータセンター電力需要で注目"
+            "company": "Vistra Corp",
+            "amount": "コールオプション50枚"
         },
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -298,8 +294,7 @@ def vip_quotes_page():
             "action": "buy",
             "ticker": "GOOGL",
             "company": "アルファベット",
-            "amount": "コールオプション50枚 $150行使価格",
-            "note": "購入後+64%上昇（12月時点）"
+            "amount": "コールオプション50枚"
         },
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -308,8 +303,7 @@ def vip_quotes_page():
             "action": "buy",
             "ticker": "NVDA",
             "company": "エヌビディア",
-            "amount": "コールオプション500枚行使→5万株取得 $500K-$1M",
-            "note": "$52行使価格で市場価格の71%引きで取得"
+            "amount": "オプション行使"
         },
         {
             "politician": "ナンシー・ペロシ（夫 ポール）",
@@ -318,8 +312,7 @@ def vip_quotes_page():
             "action": "buy",
             "ticker": "AVGO",
             "company": "ブロードコム",
-            "amount": "コールオプション200枚→2万株",
-            "note": "購入後+110%上昇。2025年6月に行使"
+            "amount": "コールオプション"
         },
     ]
 
@@ -382,14 +375,12 @@ def vip_quotes_page():
         }
     ]
 
-    # バフェット銘柄の詳細（13Fファイリングより）
+    # バフェット銘柄（13Fファイリング公開情報）
     buffett_analysis = {
-        "cash_position": "$3,540億（過去最高）",
-        "cash_trend": "12四半期連続で売り越し",
-        "apple_sold": "2024年にApple株67%（6億株以上）を売却",
-        "apple_reason": "バリュエーション懸念（PER38倍）、税金対策",
-        "new_position": "Alphabet（Google）$44億を新規購入",
-        "message": "バフェットは米国債を選好。株式より安全資産重視のサイン"
+        "cash_position": "$3,540億",
+        "cash_trend": "12四半期連続で株式を売り越し",
+        "apple_sold": "2024年にApple株を大幅売却",
+        "new_position": "Alphabet（Google）を新規購入"
     }
 
     return render_template('vip_quotes.html',

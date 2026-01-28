@@ -138,14 +138,39 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- LINE誘導バナー -->
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+        <a href="#" class="block glass-card rounded-2xl p-6 shadow-lg border-2 border-pop-green/30 bg-gradient-to-r from-pop-green/10 to-pop-cyan/10 hover:shadow-xl transition-all">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <span class="text-4xl">💬</span>
+                    <div>
+                        <p class="font-bold text-gray-800 text-lg">LINE限定：詳しい分析を配信中</p>
+                        <p class="text-gray-600 text-sm">個人の見解やトレード記録を特別に公開しています</p>
+                    </div>
+                </div>
+                <span class="bg-pop-green text-white font-bold px-6 py-3 rounded-full">
+                    友だち追加 →
+                </span>
+            </div>
+        </a>
+    </div>
+
     <!-- フッター -->
     <footer class="mt-12 py-6">
         <div class="max-w-6xl mx-auto px-4 text-center">
             <p class="text-gray-500 text-sm">
-                🎯 5000円からはじめる経済指標トレード
+                📅 経済指標カレンダー
             </p>
-            <p class="text-gray-400 text-xs mt-1">
-                年1〜2回のビッグチャンスを狙おう！
+            <div class="mt-4 p-4 rounded-xl bg-gray-100/50 max-w-2xl mx-auto">
+                <p class="text-gray-500 text-xs leading-relaxed">
+                    ⚠️ 免責事項：当サイトは情報提供を目的としており、投資助言や売買推奨を行うものではありません。
+                    掲載情報は公開情報（SEC 13Fファイリング、STOCK Act開示等）に基づいていますが、正確性・完全性を保証するものではありません。
+                    投資判断はご自身の責任で行ってください。
+                </p>
+            </div>
+            <p class="text-gray-400 text-xs mt-4">
+                © 2026 経済指標ダッシュボード
             </p>
         </div>
     </footer>
