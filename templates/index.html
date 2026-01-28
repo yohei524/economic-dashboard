@@ -97,9 +97,9 @@
 
                         <span class="text-gray-500 text-sm">
                             {% if event.type == 'NFP' %}
-                            {{ event.month }} 分
+                            {{ event.month[5:] | int }}月分データ
                             {% elif event.type == 'CPI' %}
-                            {{ event.month }} 分
+                            {{ event.month[5:] | int }}月分データ
                             {% elif event.type == 'FOMC' %}
                             {% if event.sep %}SEP・ドットプロット{% else %}声明のみ{% endif %}
                             {% elif event.type == 'BOJ' %}
