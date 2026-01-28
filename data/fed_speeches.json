@@ -1,0 +1,23 @@
+[
+  {
+    "date": "2026-01-10",
+    "official": "Waller",
+    "summary": "インフレは改善しているが、まだ目標には達していない。利下げは慎重に進める必要がある。",
+    "stance": "hawkish",
+    "market_reaction": "ドル円+25pips"
+  },
+  {
+    "date": "2026-01-15",
+    "official": "Williams",
+    "summary": "経済は堅調だが、労働市場の過熱感は和らいでいる。",
+    "stance": "neutral",
+    "market_reaction": "反応薄"
+  },
+  {
+    "date": "2026-01-20",
+    "official": "Bowman",
+    "summary": "金融政策の効果が十分に浸透するには時間が必要。性急な利下げは避けるべき。",
+    "stance": "hawkish",
+    "market_reaction": "ドル円+15pips"
+  }
+]

@@ -1,0 +1,233 @@
+{
+  "2024-01": {
+    "forecast": 17.0,
+    "actual": 21.6,
+    "prev": 19.9,
+    "market_reaction": "ドル円+80pips",
+    "notes": "予想を大幅に上回りドル高",
+    "price_moves": {
+      "release_price": 144.8,
+      "moves": {
+        "5min_after": {
+          "price": 145.3,
+          "pips": 50
+        },
+        "30min_after": {
+          "price": 145.6,
+          "pips": 80
+        },
+        "1h_after": {
+          "price": 145.5,
+          "pips": 70
+        }
+      },
+      "max_move": 80
+    }
+  },
+  "2024-02": {
+    "forecast": 18.0,
+    "actual": 35.3,
+    "prev": 21.6,
+    "market_reaction": "ドル円+120pips",
+    "notes": "サプライズの強さ",
+    "price_moves": {
+      "release_price": 148.2,
+      "moves": {
+        "5min_after": {
+          "price": 148.9,
+          "pips": 70
+        },
+        "30min_after": {
+          "price": 149.4,
+          "pips": 120
+        },
+        "1h_after": {
+          "price": 149.2,
+          "pips": 100
+        }
+      },
+      "max_move": 120
+    }
+  },
+  "2024-03": {
+    "forecast": 20.0,
+    "actual": 27.5,
+    "prev": 35.3,
+    "market_reaction": "ドル円+60pips",
+    "notes": ""
+  },
+  "2024-04": {
+    "forecast": 21.0,
+    "actual": 30.3,
+    "prev": 27.5,
+    "market_reaction": "ドル円+70pips",
+    "notes": ""
+  },
+  "2024-05": {
+    "forecast": 24.0,
+    "actual": 17.5,
+    "prev": 30.3,
+    "market_reaction": "ドル円-90pips",
+    "notes": "予想を大幅に下回りドル安",
+    "price_moves": {
+      "release_price": 155.8,
+      "moves": {
+        "5min_after": {
+          "price": 155.2,
+          "pips": -60
+        },
+        "30min_after": {
+          "price": 154.9,
+          "pips": -90
+        },
+        "1h_after": {
+          "price": 155.0,
+          "pips": -80
+        }
+      },
+      "max_move": -90
+    }
+  },
+  "2024-06": {
+    "forecast": 18.0,
+    "actual": 27.2,
+    "prev": 17.5,
+    "market_reaction": "ドル円+85pips",
+    "notes": ""
+  },
+  "2024-07": {
+    "forecast": 19.0,
+    "actual": 20.6,
+    "prev": 27.2,
+    "market_reaction": "ドル円+40pips",
+    "notes": "ほぼ予想通り、小動き"
+  },
+  "2024-08": {
+    "forecast": 17.5,
+    "actual": 11.4,
+    "prev": 20.6,
+    "market_reaction": "ドル円-150pips",
+    "notes": "大幅下振れ！景気後退懸念",
+    "price_moves": {
+      "release_price": 146.5,
+      "moves": {
+        "5min_after": {
+          "price": 145.8,
+          "pips": -70
+        },
+        "30min_after": {
+          "price": 145.2,
+          "pips": -130
+        },
+        "1h_after": {
+          "price": 145.0,
+          "pips": -150
+        }
+      },
+      "max_move": -150
+    }
+  },
+  "2024-09": {
+    "forecast": 16.0,
+    "actual": 14.2,
+    "prev": 11.4,
+    "market_reaction": "ドル円-70pips",
+    "notes": ""
+  },
+  "2024-10": {
+    "forecast": 14.0,
+    "actual": 25.4,
+    "prev": 14.2,
+    "market_reaction": "ドル円+100pips",
+    "notes": "大幅上振れ",
+    "price_moves": {
+      "release_price": 148.8,
+      "moves": {
+        "5min_after": {
+          "price": 149.4,
+          "pips": 60
+        },
+        "30min_after": {
+          "price": 149.8,
+          "pips": 100
+        },
+        "1h_after": {
+          "price": 149.6,
+          "pips": 80
+        }
+      },
+      "max_move": 100
+    }
+  },
+  "2024-11": {
+    "forecast": 11.0,
+    "actual": 1.2,
+    "prev": 25.4,
+    "market_reaction": "ドル円-130pips",
+    "notes": "ハリケーン影響で極端に弱い",
+    "price_moves": {
+      "release_price": 152.3,
+      "moves": {
+        "5min_after": {
+          "price": 151.5,
+          "pips": -80
+        },
+        "30min_after": {
+          "price": 151.0,
+          "pips": -130
+        },
+        "1h_after": {
+          "price": 151.2,
+          "pips": -110
+        }
+      },
+      "max_move": -130
+    }
+  },
+  "2024-12": {
+    "forecast": 20.0,
+    "actual": 22.7,
+    "prev": 1.2,
+    "market_reaction": "ドル円+50pips",
+    "notes": "予想通り"
+  },
+  "2025-01": {
+    "forecast": 16.0,
+    "actual": 25.6,
+    "prev": 22.7,
+    "market_reaction": "ドル円+110pips",
+    "notes": "予想を大幅に上回る",
+    "price_moves": {
+      "release_price": 157.2,
+      "moves": {
+        "5min_after": {
+          "price": 157.8,
+          "pips": 60
+        },
+        "30min_after": {
+          "price": 158.3,
+          "pips": 110
+        },
+        "1h_after": {
+          "price": 158.1,
+          "pips": 90
+        }
+      },
+      "max_move": 110
+    }
+  },
+  "2025-12": {
+    "forecast": null,
+    "actual": null,
+    "prev": null,
+    "market_reaction": null,
+    "notes": ""
+  },
+  "2026-01": {
+    "forecast": null,
+    "actual": null,
+    "prev": 25.6,
+    "market_reaction": null,
+    "notes": "2/6発表予定"
+  }
+}
