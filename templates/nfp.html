@@ -5,14 +5,15 @@
 {% block content %}
 <div class="space-y-8">
     <!-- ヘッダー -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">📊 雇用統計（NFP）</h1>
-            <p class="text-gray-400 mt-1">{{ month }} 分</p>
+            <p class="text-pop-purple font-bold text-sm tracking-wider mb-1">📊 NON-FARM PAYROLLS</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-800">雇用統計</h1>
+            <p class="text-gray-500 mt-1">{{ month }} 分</p>
         </div>
         <!-- 月選択 -->
-        <div class="flex items-center space-x-2">
-            <select id="month-select" class="bg-trader-card border border-trader-border rounded-md px-3 py-2 text-white" onchange="location.href='/nfp/' + this.value">
+        <div class="flex items-center gap-2">
+            <select id="month-select" class="glass-card px-4 py-2 rounded-xl font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-pop-purple" onchange="location.href='/nfp/' + this.value">
                 {% for nfp in all_nfp %}
                 <option value="{{ nfp.month }}" {% if nfp.month == month %}selected{% endif %}>
                     {{ nfp.month }}（{{ nfp.date }}発表）
@@ -22,94 +23,100 @@
         </div>
     </div>
 
-    <!-- メイン情報 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- メインデータカード -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- 予想・結果カード -->
-        <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-            <h2 class="text-lg font-bold text-white mb-4">📈 データ</h2>
+        <div class="glass-card rounded-3xl p-6 shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span class="text-xl">📈</span>
+                データ
+            </h2>
 
             {% if schedule %}
-            <div class="mb-4">
-                <p class="text-gray-400 text-sm">発表日時</p>
-                <p class="text-white text-xl">{{ schedule.date }} 22:30 JST</p>
+            <div class="mb-4 p-3 rounded-xl bg-pop-purple/10">
+                <p class="text-pop-purple text-sm font-medium">発表日時</p>
+                <p class="text-gray-800 text-xl font-bold">{{ schedule.date }} 22:30 JST</p>
             </div>
             {% endif %}
 
-            <div class="grid grid-cols-3 gap-4 mt-6">
-                <div class="text-center p-4 bg-trader-border/30 rounded-lg">
-                    <p class="text-gray-400 text-sm">前回</p>
-                    <p class="text-2xl font-bold text-white">
+            <div class="grid grid-cols-3 gap-3 mt-4">
+                <div class="text-center p-4 rounded-2xl bg-gray-100">
+                    <p class="text-gray-500 text-xs font-medium">前回</p>
+                    <p class="text-2xl font-black text-gray-700 mt-1">
                         {% if data.prev %}{{ data.prev }}万{% else %}-{% endif %}
                     </p>
                 </div>
-                <div class="text-center p-4 bg-trader-blue/20 rounded-lg border border-trader-blue/50">
-                    <p class="text-gray-400 text-sm">予想</p>
-                    <p class="text-2xl font-bold text-trader-blue">
+                <div class="text-center p-4 rounded-2xl bg-gradient-to-br from-pop-blue/20 to-pop-cyan/20 border-2 border-pop-blue/30">
+                    <p class="text-pop-blue text-xs font-medium">予想</p>
+                    <p class="text-2xl font-black text-pop-blue mt-1">
                         {% if data.forecast %}{{ data.forecast }}万{% else %}-{% endif %}
                     </p>
                 </div>
-                <div class="text-center p-4 {% if data.actual %}{% if data.actual > data.forecast %}bg-trader-green/20 border border-trader-green/50{% else %}bg-trader-red/20 border border-trader-red/50{% endif %}{% else %}bg-trader-border/30{% endif %} rounded-lg">
-                    <p class="text-gray-400 text-sm">結果</p>
-                    <p class="text-2xl font-bold {% if data.actual %}{% if data.actual > data.forecast %}text-trader-green{% else %}text-trader-red{% endif %}{% else %}text-white{% endif %}">
+                <div class="text-center p-4 rounded-2xl {% if data.actual %}{% if data.actual > data.forecast %}bg-gradient-to-br from-pop-green/20 to-pop-cyan/20 border-2 border-pop-green/30{% else %}bg-gradient-to-br from-pop-red/20 to-pop-pink/20 border-2 border-pop-red/30{% endif %}{% else %}bg-gray-100{% endif %}">
+                    <p class="{% if data.actual %}{% if data.actual > data.forecast %}text-pop-green{% else %}text-pop-red{% endif %}{% else %}text-gray-500{% endif %} text-xs font-medium">結果</p>
+                    <p class="text-2xl font-black {% if data.actual %}{% if data.actual > data.forecast %}text-pop-green{% else %}text-pop-red{% endif %}{% else %}text-gray-400{% endif %} mt-1">
                         {% if data.actual %}{{ data.actual }}万{% else %}-{% endif %}
                     </p>
                 </div>
             </div>
 
             {% if data.actual and data.forecast %}
-            <div class="mt-4 p-4 bg-trader-border/30 rounded-lg">
-                <p class="text-gray-400 text-sm">乖離</p>
-                <p class="text-xl font-bold {% if data.actual > data.forecast %}text-trader-green{% else %}text-trader-red{% endif %}">
+            <div class="mt-4 p-4 rounded-2xl {% if data.actual > data.forecast %}bg-pop-green/10{% else %}bg-pop-red/10{% endif %}">
+                <p class="text-gray-600 text-sm">乖離</p>
+                <p class="text-2xl font-black {% if data.actual > data.forecast %}text-pop-green{% else %}text-pop-red{% endif %}">
                     {% if data.actual > data.forecast %}+{% endif %}{{ "%.1f"|format(data.actual - data.forecast) }}万人
                 </p>
-                <p class="text-gray-400 text-sm mt-2">
+                <p class="text-gray-500 text-sm mt-2">
                     {% if data.actual > data.forecast %}
-                    予想を上回る → ドル買い（セオリー）
+                    📈 予想を上回る → ドル買い（セオリー）
                     {% else %}
-                    予想を下回る → ドル売り（セオリー）
+                    📉 予想を下回る → ドル売り（セオリー）
                     {% endif %}
                 </p>
             </div>
             {% endif %}
 
             {% if data.market_reaction %}
-            <div class="mt-4 p-4 bg-trader-border/30 rounded-lg">
-                <p class="text-gray-400 text-sm">市場反応</p>
-                <p class="text-xl font-bold text-white">{{ data.market_reaction }}</p>
+            <div class="mt-4 p-4 rounded-2xl bg-gray-100">
+                <p class="text-gray-500 text-sm">市場反応</p>
+                <p class="text-xl font-bold text-gray-800">{{ data.market_reaction }}</p>
             </div>
             {% endif %}
 
             {% if data.notes %}
-            <div class="mt-4 p-4 bg-trader-border/30 rounded-lg">
-                <p class="text-gray-400 text-sm">メモ</p>
-                <p class="text-white">{{ data.notes }}</p>
+            <div class="mt-4 p-4 rounded-2xl bg-pop-yellow/10 border border-pop-yellow/30">
+                <p class="text-pop-yellow text-sm font-medium">📝 メモ</p>
+                <p class="text-gray-700 mt-1">{{ data.notes }}</p>
             </div>
             {% endif %}
         </div>
 
         <!-- 発表直後の値動き -->
-        <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-            <h2 class="text-lg font-bold text-white mb-4">📉 発表直後の値動き</h2>
+        <div class="glass-card rounded-3xl p-6 shadow-lg">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span class="text-xl">📉</span>
+                発表直後の値動き
+            </h2>
 
             {% if data.price_moves %}
-            <div class="mb-4">
-                <p class="text-gray-400 text-sm">発表時 USD/JPY</p>
-                <p class="text-2xl font-bold text-white">{{ data.price_moves.release_price }}</p>
+            <div class="mb-4 p-3 rounded-xl bg-gray-100">
+                <p class="text-gray-500 text-sm">発表時 USD/JPY</p>
+                <p class="text-2xl font-black text-gray-800">{{ data.price_moves.release_price }}</p>
             </div>
 
             <div class="space-y-2">
                 {% for label, move in data.price_moves.moves.items() %}
-                <div class="flex items-center justify-between p-3 bg-trader-border/30 rounded-lg">
-                    <span class="text-gray-400">
-                        {% if label == '5min_after' %}5分後
-                        {% elif label == '15min_after' %}15分後
-                        {% elif label == '30min_after' %}30分後
-                        {% elif label == '1h_after' %}1時間後
+                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <span class="text-gray-600 font-medium">
+                        {% if label == '5min_after' %}⏱️ 5分後
+                        {% elif label == '15min_after' %}⏱️ 15分後
+                        {% elif label == '30min_after' %}⏱️ 30分後
+                        {% elif label == '1h_after' %}⏱️ 1時間後
                         {% else %}{{ label }}{% endif %}
                     </span>
                     <div class="text-right">
-                        <span class="text-white">{{ move.price }}</span>
-                        <span class="ml-2 font-bold {% if move.pips >= 0 %}text-trader-green{% else %}text-trader-red{% endif %}">
+                        <span class="text-gray-700 font-medium">{{ move.price }}</span>
+                        <span class="ml-2 font-bold px-2 py-1 rounded-lg {% if move.pips >= 0 %}bg-pop-green/20 text-pop-green{% else %}bg-pop-red/20 text-pop-red{% endif %}">
                             {% if move.pips >= 0 %}+{% endif %}{{ move.pips }}pips
                         </span>
                     </div>
@@ -117,39 +124,45 @@
                 {% endfor %}
             </div>
 
-            <div class="mt-4 p-4 {% if data.price_moves.max_move >= 0 %}bg-trader-green/20 border border-trader-green/50{% else %}bg-trader-red/20 border border-trader-red/50{% endif %} rounded-lg">
-                <p class="text-gray-400 text-sm">最大変動</p>
-                <p class="text-3xl font-bold {% if data.price_moves.max_move >= 0 %}text-trader-green{% else %}text-trader-red{% endif %}">
+            <div class="mt-4 p-4 rounded-2xl {% if data.price_moves.max_move >= 0 %}bg-gradient-to-r from-pop-green/20 to-pop-cyan/20 border-2 border-pop-green/30{% else %}bg-gradient-to-r from-pop-red/20 to-pop-pink/20 border-2 border-pop-red/30{% endif %}">
+                <p class="text-gray-600 text-sm">最大変動</p>
+                <p class="text-4xl font-black {% if data.price_moves.max_move >= 0 %}text-pop-green{% else %}text-pop-red{% endif %}">
                     {% if data.price_moves.max_move >= 0 %}+{% endif %}{{ data.price_moves.max_move }}pips
                 </p>
             </div>
             {% else %}
-            <p class="text-gray-500 text-center py-8">値動きデータなし</p>
+            <div class="text-center py-12">
+                <span class="text-6xl">📊</span>
+                <p class="text-gray-400 mt-4">発表後にデータが追加されます</p>
+            </div>
             {% endif %}
         </div>
     </div>
 
     <!-- 関連FRB発言 -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">🦅 関連FRB発言</h2>
-        <p class="text-gray-400 text-sm mb-4">前回NFP〜今回NFP間の発言</p>
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <span class="text-xl">🦅</span>
+            関連FRB発言
+        </h2>
+        <p class="text-gray-500 text-sm mb-4">前回NFP〜今回NFP間の発言</p>
 
         {% if speeches %}
         <div class="space-y-3 max-h-96 overflow-y-auto">
             {% for speech in speeches %}
-            <div class="p-3 bg-trader-border/30 rounded-lg">
+            <div class="p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
                 <div class="flex items-center justify-between">
-                    <span class="text-white font-medium">{{ speech.official }}</span>
-                    <span class="text-gray-500 text-sm">{{ speech.date }}</span>
+                    <span class="font-bold text-gray-800">{{ speech.official }}</span>
+                    <span class="text-gray-400 text-sm">{{ speech.date }}</span>
                 </div>
-                <p class="text-gray-300 text-sm mt-1">{{ speech.summary }}</p>
-                <div class="flex items-center mt-2 space-x-2">
+                <p class="text-gray-600 text-sm mt-2">{{ speech.summary }}</p>
+                <div class="flex items-center mt-3 gap-2">
                     {% if speech.stance == 'hawkish' %}
-                    <span class="text-xs px-2 py-0.5 rounded bg-trader-red/20 text-trader-red">🦅 タカ派</span>
+                    <span class="text-xs px-3 py-1 rounded-full bg-pop-red/20 text-pop-red font-bold">🦅 タカ派</span>
                     {% elif speech.stance == 'dovish' %}
-                    <span class="text-xs px-2 py-0.5 rounded bg-trader-green/20 text-trader-green">🕊️ ハト派</span>
+                    <span class="text-xs px-3 py-1 rounded-full bg-pop-green/20 text-pop-green font-bold">🕊️ ハト派</span>
                     {% else %}
-                    <span class="text-xs px-2 py-0.5 rounded bg-gray-500/20 text-gray-400">➖ 中立</span>
+                    <span class="text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-500 font-bold">➖ 中立</span>
                     {% endif %}
                     {% if speech.market_reaction %}
                     <span class="text-xs text-gray-400">{{ speech.market_reaction }}</span>
@@ -159,39 +172,45 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-gray-500 text-center py-8">まだ発言データがありません</p>
+        <div class="text-center py-8">
+            <span class="text-5xl">🦅</span>
+            <p class="text-gray-400 mt-4">まだ発言データがありません</p>
+        </div>
         {% endif %}
     </div>
 
     <!-- 過去の雇用統計履歴 -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">📜 過去の雇用統計</h2>
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">📜</span>
+            過去の雇用統計
+        </h2>
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-trader-border/50">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-sm text-gray-400">対象月</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">予想</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">結果</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">乖離</th>
-                        <th class="px-4 py-2 text-left text-sm text-gray-400">反応</th>
+                <thead>
+                    <tr class="border-b-2 border-gray-200">
+                        <th class="px-4 py-3 text-left text-sm font-bold text-gray-500">対象月</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">予想</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">結果</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">乖離</th>
+                        <th class="px-4 py-3 text-left text-sm font-bold text-gray-500">反応</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-trader-border">
+                <tbody class="divide-y divide-gray-100">
                     {% for m, d in nfp_history.items()|sort(reverse=True) %}
                     {% if d.actual %}
-                    <tr class="hover:bg-trader-border/30 {% if m == month %}bg-trader-blue/10{% endif %}">
-                        <td class="px-4 py-2">
-                            <a href="/nfp/{{ m }}" class="text-trader-blue hover:underline">{{ m }}</a>
+                    <tr class="hover:bg-gray-50 transition-colors {% if m == month %}bg-pop-purple/5{% endif %}">
+                        <td class="px-4 py-3">
+                            <a href="/nfp/{{ m }}" class="text-pop-purple font-bold hover:underline">{{ m }}</a>
                         </td>
-                        <td class="px-4 py-2 text-right text-white">{{ d.forecast }}万</td>
-                        <td class="px-4 py-2 text-right {% if d.actual > d.forecast %}text-trader-green{% else %}text-trader-red{% endif %}">
+                        <td class="px-4 py-3 text-right text-gray-700 font-medium">{{ d.forecast }}万</td>
+                        <td class="px-4 py-3 text-right font-bold {% if d.actual > d.forecast %}text-pop-green{% else %}text-pop-red{% endif %}">
                             {{ d.actual }}万
                         </td>
-                        <td class="px-4 py-2 text-right {% if d.actual > d.forecast %}text-trader-green{% else %}text-trader-red{% endif %}">
+                        <td class="px-4 py-3 text-right font-bold {% if d.actual > d.forecast %}text-pop-green{% else %}text-pop-red{% endif %}">
                             {% if d.actual > d.forecast %}+{% endif %}{{ "%.1f"|format(d.actual - d.forecast) }}
                         </td>
-                        <td class="px-4 py-2 text-gray-400 text-sm">{{ d.market_reaction or '-' }}</td>
+                        <td class="px-4 py-3 text-gray-500 text-sm">{{ d.market_reaction or '-' }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -200,32 +219,47 @@
         </div>
     </div>
 
-    <!-- トレード戦略（有料コンテンツ想定） -->
-    <div class="bg-gradient-to-r from-trader-yellow/10 to-trader-card border border-trader-yellow/30 rounded-lg p-6">
+    <!-- トレード戦略（プレミアムコンテンツ） -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-yellow/30 bg-gradient-to-br from-pop-yellow/5 to-pop-orange/5">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-white">📝 トレード戦略</h2>
-            <span class="text-xs bg-trader-yellow/20 text-trader-yellow px-2 py-1 rounded">PREMIUM</span>
+            <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <span class="text-xl">📝</span>
+                トレード戦略
+            </h2>
+            <span class="text-xs bg-gradient-to-r from-pop-yellow to-pop-orange text-white px-3 py-1 rounded-full font-bold">
+                ✨ PREMIUM
+            </span>
         </div>
-        <div class="prose prose-invert max-w-none text-gray-300">
-            <p class="text-trader-yellow mb-4">⚠️ 発表直前は注文が通らない → <strong>事前に全て設定</strong></p>
-            <ol class="list-decimal list-inside space-y-3">
-                <li><strong>方向感を決める</strong>: FRB発言からドルの強弱を判断</li>
-                <li><strong>発表30分〜1時間前にエントリー</strong>
-                    <ul class="list-disc list-inside ml-4 text-sm text-gray-400 mt-1">
-                        <li>スプレッド拡大前に約定させる</li>
-                        <li>5000円分（1000通貨 or 0.01ロット）</li>
+        <div class="prose max-w-none text-gray-700">
+            <div class="p-4 rounded-2xl bg-pop-yellow/10 border border-pop-yellow/30 mb-4">
+                <p class="text-pop-orange font-bold">⚠️ 発表直前は注文が通らない → 事前に全て設定！</p>
+            </div>
+            <ol class="list-decimal list-inside space-y-4">
+                <li class="p-3 rounded-xl bg-white/50">
+                    <span class="font-bold text-gray-800">方向感を決める</span>
+                    <p class="text-gray-600 text-sm mt-1 ml-6">FRB発言からドルの強弱を判断</p>
+                </li>
+                <li class="p-3 rounded-xl bg-white/50">
+                    <span class="font-bold text-gray-800">発表30分〜1時間前にエントリー</span>
+                    <ul class="text-gray-600 text-sm mt-1 ml-6 space-y-1">
+                        <li>• スプレッド拡大前に約定させる</li>
+                        <li>• 5000円分（1000通貨 or 0.01ロット）</li>
                     </ul>
                 </li>
-                <li><strong>同時にOCO注文を設定</strong>
-                    <ul class="list-disc list-inside ml-4 text-sm text-gray-400 mt-1">
-                        <li>ロスカット: -50pips（-500円）</li>
-                        <li>利確: +100pips〜（+1000円〜）</li>
+                <li class="p-3 rounded-xl bg-white/50">
+                    <span class="font-bold text-gray-800">同時にOCO注文を設定</span>
+                    <ul class="text-gray-600 text-sm mt-1 ml-6 space-y-1">
+                        <li>• 🔴 ロスカット: -50pips（-500円）</li>
+                        <li>• 🟢 利確: +100pips〜（+1000円〜）</li>
                     </ul>
                 </li>
-                <li><strong>発表後は放置</strong>: 自動で決済されるのを待つ</li>
+                <li class="p-3 rounded-xl bg-white/50">
+                    <span class="font-bold text-gray-800">発表後は放置</span>
+                    <p class="text-gray-600 text-sm mt-1 ml-6">自動で決済されるのを待つ</p>
+                </li>
             </ol>
-            <div class="mt-4 p-3 bg-trader-border/30 rounded-lg text-sm">
-                <p class="text-gray-400">💡 ポイント: 発表時はスプレッドが10〜30pips開くことも。成行は危険。</p>
+            <div class="mt-4 p-4 rounded-2xl bg-pop-blue/10 border border-pop-blue/30">
+                <p class="text-pop-blue text-sm">💡 <span class="font-bold">ポイント:</span> 発表時はスプレッドが10〜30pips開くことも。成行は危険！</p>
             </div>
         </div>
     </div>

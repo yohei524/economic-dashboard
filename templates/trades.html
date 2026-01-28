@@ -5,57 +5,63 @@
 {% block content %}
 <div class="space-y-8">
     <!-- ヘッダー -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">💰 トレード履歴</h1>
-            <p class="text-gray-400 mt-1">5000円ギャンブルの記録</p>
+            <p class="text-pop-green font-bold text-sm tracking-wider mb-1">💰 TRADE HISTORY</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-800">トレード履歴</h1>
+            <p class="text-gray-500 mt-1">5000円ギャンブルの記録</p>
         </div>
-        <button onclick="showAddModal()" class="bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+        <button onclick="showAddModal()" class="bg-gradient-to-r from-pop-green to-pop-cyan text-white font-bold px-5 py-2.5 rounded-full shadow-lg hover:scale-105 transition-transform">
             + トレードを追加
         </button>
     </div>
 
     <!-- サマリー -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-trader-card border border-trader-border rounded-lg p-4">
-            <p class="text-gray-400 text-sm">総損益</p>
-            <p class="text-2xl font-bold {% if total_pnl >= 0 %}text-trader-green{% else %}text-trader-red{% endif %}">
+        <div class="glass-card rounded-2xl p-5 shadow-lg">
+            <p class="text-gray-500 text-sm font-medium">総損益</p>
+            <p class="text-3xl font-black mt-1 {% if total_pnl >= 0 %}text-pop-green{% else %}text-pop-red{% endif %}">
                 {% if total_pnl >= 0 %}+{% endif %}{{ "{:,}".format(total_pnl) }}円
             </p>
         </div>
-        <div class="bg-trader-card border border-trader-border rounded-lg p-4">
-            <p class="text-gray-400 text-sm">勝率</p>
-            <p class="text-2xl font-bold text-white">{{ "%.1f"|format(win_rate) }}%</p>
-            <p class="text-gray-500 text-sm">{{ win_count }}勝 {{ lose_count }}敗</p>
+        <div class="glass-card rounded-2xl p-5 shadow-lg">
+            <p class="text-gray-500 text-sm font-medium">勝率</p>
+            <p class="text-3xl font-black text-gray-800 mt-1">{{ "%.1f"|format(win_rate) }}%</p>
+            <p class="text-gray-400 text-sm">{{ win_count }}勝 {{ lose_count }}敗</p>
         </div>
-        <div class="bg-trader-card border border-trader-border rounded-lg p-4">
-            <p class="text-gray-400 text-sm">トレード回数</p>
-            <p class="text-2xl font-bold text-white">{{ trades|length }}回</p>
+        <div class="glass-card rounded-2xl p-5 shadow-lg">
+            <p class="text-gray-500 text-sm font-medium">トレード回数</p>
+            <p class="text-3xl font-black text-gray-800 mt-1">{{ trades|length }}回</p>
         </div>
-        <div class="bg-trader-card border border-trader-border rounded-lg p-4">
-            <p class="text-gray-400 text-sm">投資額/回</p>
-            <p class="text-2xl font-bold text-trader-yellow">5,000円</p>
+        <div class="glass-card rounded-2xl p-5 shadow-lg bg-gradient-to-br from-pop-yellow/10 to-pop-orange/10">
+            <p class="text-gray-500 text-sm font-medium">投資額/回</p>
+            <p class="text-3xl font-black text-pop-yellow mt-1">5,000円</p>
         </div>
     </div>
 
     <!-- 累計収支グラフ -->
     {% if cumulative %}
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">📈 累計収支推移</h2>
-        <div class="h-48 flex items-end space-x-1">
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">📈</span>
+            累計収支推移
+        </h2>
+        <div class="h-48 flex items-end gap-1">
             {% set max_val = cumulative|map(attribute='total')|max %}
             {% set min_val = cumulative|map(attribute='total')|min %}
             {% set range_val = (max_val - min_val) if (max_val - min_val) > 0 else 1 %}
             {% for point in cumulative %}
-            <div class="flex-1 flex flex-col items-center justify-end">
-                <div class="w-full {% if point.total >= 0 %}bg-trader-green{% else %}bg-trader-red{% endif %} rounded-t"
-                     style="height: {{ ((point.total - min_val) / range_val * 150 + 10)|int }}px"
-                     title="{{ point.date }}: {{ point.total }}円">
+            <div class="flex-1 flex flex-col items-center justify-end group relative">
+                <div class="w-full rounded-t-lg transition-all group-hover:opacity-80 {% if point.total >= 0 %}bg-gradient-to-t from-pop-green to-pop-cyan{% else %}bg-gradient-to-t from-pop-red to-pop-pink{% endif %}"
+                     style="height: {{ ((point.total - min_val) / range_val * 150 + 10)|int }}px">
+                </div>
+                <div class="absolute -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    {{ point.date }}: {{ "{:,}".format(point.total) }}円
                 </div>
             </div>
             {% endfor %}
         </div>
-        <div class="flex justify-between text-gray-500 text-xs mt-2">
+        <div class="flex justify-between text-gray-400 text-xs mt-2">
             <span>{{ cumulative[0].date if cumulative else '' }}</span>
             <span>{{ cumulative[-1].date if cumulative else '' }}</span>
         </div>
@@ -63,43 +69,48 @@
     {% endif %}
 
     <!-- トレード一覧 -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">📋 トレード一覧</h2>
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">📋</span>
+            トレード一覧
+        </h2>
 
         {% if trades %}
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-trader-border/50">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-sm text-gray-400">日付</th>
-                        <th class="px-4 py-2 text-left text-sm text-gray-400">指標</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">エントリー</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">決済</th>
-                        <th class="px-4 py-2 text-right text-sm text-gray-400">損益</th>
-                        <th class="px-4 py-2 text-left text-sm text-gray-400">メモ</th>
+                <thead>
+                    <tr class="border-b-2 border-gray-200">
+                        <th class="px-4 py-3 text-left text-sm font-bold text-gray-500">日付</th>
+                        <th class="px-4 py-3 text-left text-sm font-bold text-gray-500">指標</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">エントリー</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">決済</th>
+                        <th class="px-4 py-3 text-right text-sm font-bold text-gray-500">損益</th>
+                        <th class="px-4 py-3 text-left text-sm font-bold text-gray-500">メモ</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-trader-border">
+                <tbody class="divide-y divide-gray-100">
                     {% for trade in trades|sort(attribute='date', reverse=True) %}
-                    <tr class="hover:bg-trader-border/30">
-                        <td class="px-4 py-3 text-white">{{ trade.date }}</td>
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 text-gray-800 font-medium">{{ trade.date }}</td>
                         <td class="px-4 py-3">
                             {% if trade.indicator == 'NFP' %}
-                            <span class="px-2 py-1 rounded bg-blue-500/20 text-trader-blue text-sm">NFP</span>
+                            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-pop-purple to-pop-blue text-white text-sm font-bold">NFP</span>
                             {% elif trade.indicator == 'CPI' %}
-                            <span class="px-2 py-1 rounded bg-yellow-500/20 text-trader-yellow text-sm">CPI</span>
+                            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-pop-yellow to-pop-orange text-white text-sm font-bold">CPI</span>
                             {% elif trade.indicator == 'FOMC' %}
-                            <span class="px-2 py-1 rounded bg-red-500/20 text-trader-red text-sm">FOMC</span>
+                            <span class="px-3 py-1 rounded-full bg-gradient-to-r from-pop-red to-pop-pink text-white text-sm font-bold">FOMC</span>
                             {% else %}
-                            <span class="px-2 py-1 rounded bg-gray-500/20 text-gray-400 text-sm">{{ trade.indicator }}</span>
+                            <span class="px-3 py-1 rounded-full bg-gray-200 text-gray-600 text-sm font-bold">{{ trade.indicator }}</span>
                             {% endif %}
                         </td>
-                        <td class="px-4 py-3 text-right text-white">{{ trade.entry }}</td>
-                        <td class="px-4 py-3 text-right text-white">{{ trade.exit }}</td>
-                        <td class="px-4 py-3 text-right font-bold {% if trade.pnl >= 0 %}text-trader-green{% else %}text-trader-red{% endif %}">
-                            {% if trade.pnl >= 0 %}+{% endif %}{{ "{:,}".format(trade.pnl) }}円
+                        <td class="px-4 py-3 text-right text-gray-700 font-medium">{{ trade.entry }}</td>
+                        <td class="px-4 py-3 text-right text-gray-700 font-medium">{{ trade.exit }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <span class="font-bold px-3 py-1 rounded-lg {% if trade.pnl >= 0 %}bg-pop-green/20 text-pop-green{% else %}bg-pop-red/20 text-pop-red{% endif %}">
+                                {% if trade.pnl >= 0 %}+{% endif %}{{ "{:,}".format(trade.pnl) }}円
+                            </span>
                         </td>
-                        <td class="px-4 py-3 text-gray-400 text-sm">{{ trade.notes or '-' }}</td>
+                        <td class="px-4 py-3 text-gray-500 text-sm">{{ trade.notes or '-' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -107,8 +118,9 @@
         </div>
         {% else %}
         <div class="text-center py-12">
-            <p class="text-gray-500 text-lg">まだトレード記録がありません</p>
-            <button onclick="showAddModal()" class="mt-4 bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+            <span class="text-6xl">💰</span>
+            <p class="text-gray-400 text-lg mt-4">まだトレード記録がありません</p>
+            <button onclick="showAddModal()" class="mt-4 bg-gradient-to-r from-pop-green to-pop-cyan text-white font-bold px-5 py-2.5 rounded-full shadow-lg hover:scale-105 transition-transform">
                 最初のトレードを記録
             </button>
         </div>
@@ -116,35 +128,45 @@
     </div>
 
     <!-- 年間目標 -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">🎯 年間目標</h2>
-        <div class="prose prose-invert max-w-none text-gray-300">
-            <ul class="list-disc list-inside space-y-2">
-                <li>年12回 × 5,000円 = <strong>60,000円の投資</strong></li>
-                <li>1回でも大きく取れれば（20万円以上）= <strong>プラス</strong></li>
-                <li>勝率は50%以下でOK、期待値プラスを狙う</li>
-            </ul>
-            <div class="mt-4 p-4 bg-trader-border/30 rounded-lg">
-                <p class="text-trader-yellow">⚠️ これはギャンブル。損失は「娯楽費」として割り切る。</p>
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-purple/30 bg-gradient-to-br from-pop-purple/5 to-pop-pink/5">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">🎯</span>
+            年間目標
+        </h2>
+        <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-white/50">
+                <p class="text-gray-700">年12回 × 5,000円 = <span class="font-bold text-pop-purple">60,000円の投資</span></p>
             </div>
+            <div class="p-3 rounded-xl bg-white/50">
+                <p class="text-gray-700">1回でも大きく取れれば（20万円以上）= <span class="font-bold text-pop-green">プラス</span></p>
+            </div>
+            <div class="p-3 rounded-xl bg-white/50">
+                <p class="text-gray-700">勝率は50%以下でOK、<span class="font-bold">期待値プラス</span>を狙う</p>
+            </div>
+        </div>
+        <div class="mt-4 p-4 rounded-2xl bg-pop-yellow/10 border border-pop-yellow/30">
+            <p class="text-pop-orange font-bold">⚠️ これはギャンブル。損失は「娯楽費」として割り切る。</p>
         </div>
     </div>
 </div>
 
 <!-- 追加モーダル -->
-<div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6 w-full max-w-md mx-4">
-        <h3 class="text-lg font-bold text-white mb-4">トレードを追加</h3>
+<div id="addModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="glass-card rounded-3xl p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">💰</span>
+            トレードを追加
+        </h3>
         <form id="addForm" class="space-y-4">
             <div>
-                <label class="block text-gray-400 text-sm mb-1">日付</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">日付</label>
                 <input type="date" name="date" required
-                       class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                       class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none">
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">指標</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">指標</label>
                 <select name="indicator" required
-                        class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                        class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none">
                     <option value="NFP">雇用統計（NFP）</option>
                     <option value="CPI">CPI</option>
                     <option value="FOMC">FOMC</option>
@@ -154,33 +176,33 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-gray-400 text-sm mb-1">エントリー価格</label>
+                    <label class="block text-gray-600 text-sm font-medium mb-1">エントリー価格</label>
                     <input type="number" name="entry" step="0.01" required
-                           class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                           class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-sm mb-1">決済価格</label>
+                    <label class="block text-gray-600 text-sm font-medium mb-1">決済価格</label>
                     <input type="number" name="exit" step="0.01" required
-                           class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                           class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none">
                 </div>
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">損益（円）</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">損益（円）</label>
                 <input type="number" name="pnl" required
-                       class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                       class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none">
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">メモ（任意）</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">メモ（任意）</label>
                 <textarea name="notes" rows="2"
-                          class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white"></textarea>
+                          class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-green focus:outline-none"></textarea>
             </div>
-            <div class="flex space-x-3">
+            <div class="flex gap-3 pt-2">
                 <button type="button" onclick="hideAddModal()"
-                        class="flex-1 bg-trader-border hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-4 py-2.5 rounded-xl transition-colors">
                     キャンセル
                 </button>
                 <button type="submit"
-                        class="flex-1 bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                        class="flex-1 bg-gradient-to-r from-pop-green to-pop-cyan text-white font-bold px-4 py-2.5 rounded-xl hover:scale-105 transition-transform">
                     追加
                 </button>
             </div>

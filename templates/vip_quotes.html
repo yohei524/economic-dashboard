@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}要人発言 | 経済指標ダッシュボード{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- ヘッダー -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+            <p class="text-pop-purple font-bold text-sm tracking-wider mb-1">🎩 VIP QUOTES</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-800">要人発言</h1>
+            <p class="text-gray-500 mt-1">投資の神様・各国トップの発言をチェック</p>
+        </div>
+    </div>
+
+    <!-- カテゴリタブ -->
+    <div class="flex flex-wrap gap-2">
+        <button class="px-4 py-2 rounded-full bg-gradient-to-r from-pop-purple to-pop-pink text-white font-bold text-sm">
+            すべて
+        </button>
+        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
+            🧙‍♂️ 投資家
+        </button>
+        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
+            🏛️ 政治家
+        </button>
+        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
+            🌐 ダボス会議
+        </button>
+        <button class="px-4 py-2 rounded-full bg-white text-gray-600 font-medium text-sm hover:bg-gray-100">
+            📊 機関投資家
+        </button>
+    </div>
+
+    <!-- 注目の投資家セクション -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">🧙‍♂️</span>
+            注目の投資家
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for quote in investor_quotes %}
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-{{ quote.color }}/5 to-{{ quote.color2 }}/5 border border-{{ quote.color }}/20 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-4xl">{{ quote.emoji }}</span>
+                    <div>
+                        <p class="font-bold text-gray-800 text-lg">{{ quote.name }}</p>
+                        <p class="text-xs text-gray-400">{{ quote.title }}</p>
+                        <p class="text-xs text-gray-500">{{ quote.date }} {{ quote.event }}</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">「{{ quote.quote }}」</p>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-xs px-3 py-1 rounded-full {% if quote.stance == 'bullish' %}bg-pop-green/20 text-pop-green{% elif quote.stance == 'bearish' %}bg-pop-red/20 text-pop-red{% else %}bg-pop-yellow/20 text-pop-yellow{% endif %} font-bold">
+                        {% if quote.stance == 'bullish' %}📈 強気{% elif quote.stance == 'bearish' %}📉 弱気{% else %}⚠️ 慎重{% endif %}
+                    </span>
+                    {% if quote.market_impact %}
+                    <span class="text-xs text-gray-500">{{ quote.market_impact }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ペロシトラッカー（議員の取引追跡）-->
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-pink/30 bg-gradient-to-br from-pop-pink/5 to-pop-purple/5">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-black text-gray-800 flex items-center gap-2">
+                <span class="text-2xl">🏛️</span>
+                議員トレード追跡
+            </h2>
+            <span class="text-xs bg-gradient-to-r from-pop-pink to-pop-purple text-white px-3 py-1 rounded-full font-bold">
+                🔥 HOT
+            </span>
+        </div>
+        <p class="text-gray-600 text-sm mb-4">
+            米国では議員の株式取引が公開義務。特にナンシー・ペロシ元下院議長の夫ポール・ペロシ氏の取引は「ペロシトレード」として注目されています。
+        </p>
+
+        <div class="space-y-3">
+            {% for trade in pelosi_trades %}
+            <div class="p-4 rounded-2xl bg-white/50 hover:bg-white/80 transition-colors">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">{{ trade.emoji }}</span>
+                        <div>
+                            <p class="font-bold text-gray-800">{{ trade.politician }}</p>
+                            <p class="text-xs text-gray-400">{{ trade.date }}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full {% if trade.action == 'buy' %}bg-pop-green/20 text-pop-green{% else %}bg-pop-red/20 text-pop-red{% endif %} font-bold">
+                        {% if trade.action == 'buy' %}買い{% else %}売り{% endif %}
+                    </span>
+                </div>
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="font-bold text-pop-purple">{{ trade.ticker }}</span>
+                    <span class="text-gray-600">{{ trade.company }}</span>
+                </div>
+                <p class="text-gray-500 text-sm mt-1">{{ trade.amount }}</p>
+                {% if trade.note %}
+                <p class="text-pop-pink text-xs mt-2">💡 {{ trade.note }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-4 p-3 rounded-xl bg-pop-yellow/10 border border-pop-yellow/30">
+            <p class="text-pop-orange text-sm">
+                ⚠️ 議員の取引は45日以内に開示義務あり。開示時点では既に株価が動いている可能性があります。
+            </p>
+        </div>
+    </div>
+
+    <!-- ダボス会議 -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">🌐</span>
+            ダボス会議 2026
+        </h2>
+        <p class="text-gray-500 text-sm mb-4">世界経済フォーラム年次総会（1/20-24）での要人発言</p>
+
+        <div class="space-y-4">
+            {% for quote in davos_quotes %}
+            <div class="p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors border-l-4 border-pop-blue">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">{{ quote.emoji }}</span>
+                        <span class="font-bold text-gray-800">{{ quote.name }}</span>
+                        <span class="text-gray-500 text-sm">{{ quote.title }}</span>
+                    </div>
+                    <span class="text-gray-400 text-sm">{{ quote.date }}</span>
+                </div>
+                <p class="text-gray-700 mt-2">「{{ quote.quote }}」</p>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-xs px-2 py-1 rounded-full bg-pop-blue/20 text-pop-blue font-medium">{{ quote.topic }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 機関投資家の動向 -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">📊</span>
+            機関投資家の動向
+        </h2>
+        <p class="text-gray-500 text-sm mb-4">大手ヘッジファンド・年金基金のポジション</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for fund in hedge_funds %}
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pop-purple to-pop-blue flex items-center justify-center text-white font-bold text-lg">
+                        {{ fund.name[:2] }}
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-800">{{ fund.name }}</p>
+                        <p class="text-xs text-gray-500">運用資産: {{ fund.aum }}</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 text-sm">2025年リターン</span>
+                        <span class="font-bold {% if fund.return_2025 > 0 %}text-pop-green{% else %}text-pop-red{% endif %}">
+                            {% if fund.return_2025 > 0 %}+{% endif %}{{ fund.return_2025 }}%
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 text-sm">主要ポジション</span>
+                        <span class="text-gray-800 font-medium text-sm">{{ fund.top_holdings }}</span>
+                    </div>
+                </div>
+                {% if fund.recent_move %}
+                <div class="mt-3 p-2 rounded-lg bg-pop-yellow/10">
+                    <p class="text-pop-orange text-xs">🔔 {{ fund.recent_move }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 13F情報 -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-blue/30 bg-gradient-to-br from-pop-blue/5 to-pop-cyan/5">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">📋</span>
+            13Fファイリング
+        </h2>
+        <p class="text-gray-600 text-sm mb-4">
+            米国では運用資産1億ドル以上の機関投資家は四半期ごとに保有銘柄を開示する義務があります（13Fレポート）。バフェットのバークシャー・ハサウェイなども対象。
+        </p>
+        <div class="p-4 rounded-2xl bg-white/50">
+            <p class="text-gray-700 text-sm">
+                <span class="font-bold">次回開示期限:</span> 2026年2月14日（2025年Q4分）
+            </p>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">バークシャー・ハサウェイ</span>
+            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ブリッジウォーター</span>
+            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ルネサンス・テクノロジーズ</span>
+            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">シタデル</span>
+            <span class="text-xs px-3 py-1.5 rounded-full bg-white text-gray-600 font-medium">ツーシグマ</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

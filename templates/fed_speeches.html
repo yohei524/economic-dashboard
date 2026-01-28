@@ -5,61 +5,118 @@
 {% block content %}
 <div class="space-y-8">
     <!-- ヘッダー -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">🦅 FRB発言</h1>
-            <p class="text-gray-400 mt-1">タカ派/ハト派の発言を時系列で追跡</p>
+            <p class="text-pop-blue font-bold text-sm tracking-wider mb-1">🦅 FEDERAL RESERVE</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-800">FRB発言</h1>
+            <p class="text-gray-500 mt-1">タカ派/ハト派の発言を時系列で追跡</p>
         </div>
-        <button onclick="showAddModal()" class="bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+        <button onclick="showAddModal()" class="bg-gradient-to-r from-pop-blue to-pop-cyan text-white font-bold px-5 py-2.5 rounded-full shadow-lg hover:scale-105 transition-transform">
             + 発言を追加
         </button>
     </div>
 
+    <!-- スタンス集計 -->
+    {% if speeches %}
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">📊</span>
+            直近のスタンス集計
+        </h2>
+        {% set hawkish_count = speeches|selectattr('stance', 'equalto', 'hawkish')|list|length %}
+        {% set dovish_count = speeches|selectattr('stance', 'equalto', 'dovish')|list|length %}
+        {% set neutral_count = speeches|selectattr('stance', 'equalto', 'neutral')|list|length %}
+        {% set total = hawkish_count + dovish_count + neutral_count %}
+
+        <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="text-center p-4 rounded-2xl bg-gradient-to-br from-pop-red/10 to-pop-pink/10 border-2 border-pop-red/30">
+                <p class="text-4xl font-black text-pop-red">{{ hawkish_count }}</p>
+                <p class="text-gray-600 font-medium">🦅 タカ派</p>
+                {% if total > 0 %}
+                <p class="text-sm text-gray-400 mt-1">{{ "%.0f"|format(hawkish_count/total*100) }}%</p>
+                {% endif %}
+            </div>
+            <div class="text-center p-4 rounded-2xl bg-gray-100">
+                <p class="text-4xl font-black text-gray-500">{{ neutral_count }}</p>
+                <p class="text-gray-600 font-medium">➖ 中立</p>
+                {% if total > 0 %}
+                <p class="text-sm text-gray-400 mt-1">{{ "%.0f"|format(neutral_count/total*100) }}%</p>
+                {% endif %}
+            </div>
+            <div class="text-center p-4 rounded-2xl bg-gradient-to-br from-pop-green/10 to-pop-cyan/10 border-2 border-pop-green/30">
+                <p class="text-4xl font-black text-pop-green">{{ dovish_count }}</p>
+                <p class="text-gray-600 font-medium">🕊️ ハト派</p>
+                {% if total > 0 %}
+                <p class="text-sm text-gray-400 mt-1">{{ "%.0f"|format(dovish_count/total*100) }}%</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="p-4 rounded-2xl {% if hawkish_count > dovish_count %}bg-pop-red/10 border border-pop-red/30{% elif dovish_count > hawkish_count %}bg-pop-green/10 border border-pop-green/30{% else %}bg-gray-100{% endif %}">
+            <p class="text-gray-700 font-medium">
+                {% if hawkish_count > dovish_count %}
+                <span class="text-pop-red font-bold">🦅 タカ派優勢</span> → ドル高方向のバイアス
+                {% elif dovish_count > hawkish_count %}
+                <span class="text-pop-green font-bold">🕊️ ハト派優勢</span> → ドル安方向のバイアス
+                {% else %}
+                <span class="text-gray-600 font-bold">➖ 拮抗</span> → 方向感なし
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- FRB高官一覧 -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">👤 FRB高官</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">👤</span>
+            FRB高官
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             {% for key, official in officials.items() %}
-            <div class="p-3 bg-trader-border/30 rounded-lg">
-                <p class="text-white font-medium">{{ official.name }}</p>
-                <p class="text-gray-400 text-sm">{{ key }}</p>
-                <p class="text-trader-yellow text-sm">{{ official.weight }}</p>
+            <div class="p-3 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <p class="text-gray-800 font-bold">{{ official.name }}</p>
+                <p class="text-gray-500 text-sm">{{ key }}</p>
+                <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-pop-yellow/20 text-pop-yellow font-medium">{{ official.weight }}</span>
             </div>
             {% endfor %}
         </div>
     </div>
 
     <!-- 発言リスト -->
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">💬 発言履歴</h2>
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-xl">💬</span>
+            発言履歴
+        </h2>
 
         {% if speeches %}
         <div class="space-y-4">
             {% for speech in speeches %}
-            <div class="p-4 bg-trader-border/30 rounded-lg border-l-4 {% if speech.stance == 'hawkish' %}border-trader-red{% elif speech.stance == 'dovish' %}border-trader-green{% else %}border-gray-500{% endif %}">
+            <div class="p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors border-l-4 {% if speech.stance == 'hawkish' %}border-pop-red{% elif speech.stance == 'dovish' %}border-pop-green{% else %}border-gray-300{% endif %}">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-white font-bold">{{ speech.official }}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-800 font-bold text-lg">{{ speech.official }}</span>
                         {% if officials.get(speech.official) %}
-                        <span class="text-gray-400 text-sm">{{ officials[speech.official].name }}</span>
+                        <span class="text-gray-500 text-sm">{{ officials[speech.official].name }}</span>
                         {% endif %}
                     </div>
-                    <span class="text-gray-500 text-sm">{{ speech.date }}</span>
+                    <span class="text-gray-400 text-sm bg-white px-3 py-1 rounded-full">{{ speech.date }}</span>
                 </div>
 
-                <p class="text-gray-200 mt-2">{{ speech.summary }}</p>
+                <p class="text-gray-700 mt-3">{{ speech.summary }}</p>
 
-                <div class="flex items-center mt-3 space-x-3">
+                <div class="flex items-center mt-3 gap-2 flex-wrap">
                     {% if speech.stance == 'hawkish' %}
-                    <span class="px-3 py-1 rounded-full bg-trader-red/20 text-trader-red text-sm">🦅 タカ派</span>
+                    <span class="px-3 py-1 rounded-full bg-pop-red/20 text-pop-red text-sm font-bold">🦅 タカ派</span>
                     {% elif speech.stance == 'dovish' %}
-                    <span class="px-3 py-1 rounded-full bg-trader-green/20 text-trader-green text-sm">🕊️ ハト派</span>
+                    <span class="px-3 py-1 rounded-full bg-pop-green/20 text-pop-green text-sm font-bold">🕊️ ハト派</span>
                     {% else %}
-                    <span class="px-3 py-1 rounded-full bg-gray-500/20 text-gray-400 text-sm">➖ 中立</span>
+                    <span class="px-3 py-1 rounded-full bg-gray-200 text-gray-500 text-sm font-bold">➖ 中立</span>
                     {% endif %}
 
                     {% if speech.market_reaction %}
-                    <span class="text-gray-400 text-sm">市場反応: {{ speech.market_reaction }}</span>
+                    <span class="text-gray-500 text-sm">市場反応: {{ speech.market_reaction }}</span>
                     {% endif %}
                 </div>
             </div>
@@ -67,107 +124,64 @@
         </div>
         {% else %}
         <div class="text-center py-12">
-            <p class="text-gray-500 text-lg">まだ発言データがありません</p>
-            <button onclick="showAddModal()" class="mt-4 bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
+            <span class="text-6xl">🦅</span>
+            <p class="text-gray-400 text-lg mt-4">まだ発言データがありません</p>
+            <button onclick="showAddModal()" class="mt-4 bg-gradient-to-r from-pop-blue to-pop-cyan text-white font-bold px-5 py-2.5 rounded-full shadow-lg hover:scale-105 transition-transform">
                 最初の発言を追加
             </button>
         </div>
         {% endif %}
     </div>
-
-    <!-- スタンス集計 -->
-    {% if speeches %}
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6">
-        <h2 class="text-lg font-bold text-white mb-4">📊 直近のスタンス集計</h2>
-        {% set hawkish_count = speeches|selectattr('stance', 'equalto', 'hawkish')|list|length %}
-        {% set dovish_count = speeches|selectattr('stance', 'equalto', 'dovish')|list|length %}
-        {% set neutral_count = speeches|selectattr('stance', 'equalto', 'neutral')|list|length %}
-        {% set total = hawkish_count + dovish_count + neutral_count %}
-
-        <div class="grid grid-cols-3 gap-4">
-            <div class="text-center p-4 bg-trader-red/20 rounded-lg">
-                <p class="text-3xl font-bold text-trader-red">{{ hawkish_count }}</p>
-                <p class="text-gray-400">🦅 タカ派</p>
-                {% if total > 0 %}
-                <p class="text-sm text-gray-500">{{ "%.0f"|format(hawkish_count/total*100) }}%</p>
-                {% endif %}
-            </div>
-            <div class="text-center p-4 bg-gray-500/20 rounded-lg">
-                <p class="text-3xl font-bold text-gray-400">{{ neutral_count }}</p>
-                <p class="text-gray-400">➖ 中立</p>
-                {% if total > 0 %}
-                <p class="text-sm text-gray-500">{{ "%.0f"|format(neutral_count/total*100) }}%</p>
-                {% endif %}
-            </div>
-            <div class="text-center p-4 bg-trader-green/20 rounded-lg">
-                <p class="text-3xl font-bold text-trader-green">{{ dovish_count }}</p>
-                <p class="text-gray-400">🕊️ ハト派</p>
-                {% if total > 0 %}
-                <p class="text-sm text-gray-500">{{ "%.0f"|format(dovish_count/total*100) }}%</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="mt-4 p-4 bg-trader-border/30 rounded-lg">
-            <p class="text-gray-400">
-                {% if hawkish_count > dovish_count %}
-                <span class="text-trader-red">🦅 タカ派優勢</span> → ドル高方向のバイアス
-                {% elif dovish_count > hawkish_count %}
-                <span class="text-trader-green">🕊️ ハト派優勢</span> → ドル安方向のバイアス
-                {% else %}
-                <span class="text-gray-400">➖ 拮抗</span> → 方向感なし
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    {% endif %}
 </div>
 
 <!-- 追加モーダル -->
-<div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-trader-card border border-trader-border rounded-lg p-6 w-full max-w-md mx-4">
-        <h3 class="text-lg font-bold text-white mb-4">FRB発言を追加</h3>
+<div id="addModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div class="glass-card rounded-3xl p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">🦅</span>
+            FRB発言を追加
+        </h3>
         <form id="addForm" class="space-y-4">
             <div>
-                <label class="block text-gray-400 text-sm mb-1">日付</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">日付</label>
                 <input type="date" name="date" required
-                       class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                       class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-blue focus:outline-none">
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">高官名</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">高官名</label>
                 <select name="official" required
-                        class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                        class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-blue focus:outline-none">
                     {% for key, official in officials.items() %}
                     <option value="{{ key }}">{{ official.name }} ({{ key }})</option>
                     {% endfor %}
                 </select>
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">発言要約</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">発言要約</label>
                 <textarea name="summary" required rows="3"
-                          class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white"></textarea>
+                          class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-blue focus:outline-none"></textarea>
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">スタンス</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">スタンス</label>
                 <select name="stance" required
-                        class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                        class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-blue focus:outline-none">
                     <option value="hawkish">🦅 タカ派</option>
                     <option value="neutral">➖ 中立</option>
                     <option value="dovish">🕊️ ハト派</option>
                 </select>
             </div>
             <div>
-                <label class="block text-gray-400 text-sm mb-1">市場反応（任意）</label>
+                <label class="block text-gray-600 text-sm font-medium mb-1">市場反応（任意）</label>
                 <input type="text" name="market_reaction" placeholder="例: ドル円+30pips"
-                       class="w-full bg-trader-border border border-trader-border rounded-md px-3 py-2 text-white">
+                       class="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-2.5 text-gray-800 focus:border-pop-blue focus:outline-none">
             </div>
-            <div class="flex space-x-3">
+            <div class="flex gap-3 pt-2">
                 <button type="button" onclick="hideAddModal()"
-                        class="flex-1 bg-trader-border hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-4 py-2.5 rounded-xl transition-colors">
                     キャンセル
                 </button>
                 <button type="submit"
-                        class="flex-1 bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                        class="flex-1 bg-gradient-to-r from-pop-blue to-pop-cyan text-white font-bold px-4 py-2.5 rounded-xl hover:scale-105 transition-transform">
                     追加
                 </button>
             </div>

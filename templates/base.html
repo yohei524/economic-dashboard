@@ -5,19 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}経済指標ダッシュボード{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        'sans': ['Noto Sans JP', 'sans-serif'],
+                    },
                     colors: {
-                        'trader-bg': '#0d1117',
-                        'trader-card': '#161b22',
-                        'trader-border': '#30363d',
-                        'trader-green': '#3fb950',
-                        'trader-red': '#f85149',
-                        'trader-blue': '#58a6ff',
-                        'trader-yellow': '#d29922',
+                        'pop-pink': '#FF6B9D',
+                        'pop-purple': '#C084FC',
+                        'pop-blue': '#60A5FA',
+                        'pop-cyan': '#22D3EE',
+                        'pop-green': '#4ADE80',
+                        'pop-yellow': '#FBBF24',
+                        'pop-orange': '#FB923C',
+                        'pop-red': '#F87171',
                     }
                 }
             }
@@ -25,52 +31,122 @@
     </script>
     <style>
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fdf4ff 0%, #faf5ff 25%, #f0f9ff 50%, #ecfeff 75%, #f0fdf4 100%);
+            min-height: 100vh;
         }
-        .hawkish { color: #f85149; }
-        .dovish { color: #3fb950; }
-        .neutral { color: #8b949e; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #FF6B9D, #C084FC, #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hawkish { color: #F87171; }
+        .dovish { color: #4ADE80; }
+        .neutral { color: #94A3B8; }
+        .bounce-hover:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s ease;
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #FF6B9D, #C084FC);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
     <!-- ナビゲーション -->
-    <nav class="bg-trader-card border-b border-trader-border">
-        <div class="max-w-7xl mx-auto px-4">
+    <nav class="glass-card sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center space-x-8">
-                    <a href="/" class="text-xl font-bold text-white">📊 指標トレード</a>
-                    <div class="flex space-x-4">
-                        <a href="/" class="px-3 py-2 rounded-md text-sm hover:bg-trader-border {% if request.path == '/' %}bg-trader-border text-white{% else %}text-gray-400{% endif %}">
-                            カレンダー
+                    <a href="/" class="text-2xl font-black gradient-text flex items-center gap-2">
+                        <span class="text-3xl">💹</span>
+                        <span>指標トレード</span>
+                    </a>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="/" class="nav-link px-2 py-1 font-medium {% if request.path == '/' %}active text-pop-pink{% else %}text-gray-600 hover:text-pop-pink{% endif %}">
+                            📅 カレンダー
                         </a>
-                        <a href="/nfp" class="px-3 py-2 rounded-md text-sm hover:bg-trader-border {% if '/nfp' in request.path %}bg-trader-border text-white{% else %}text-gray-400{% endif %}">
-                            雇用統計
+                        <a href="/nfp" class="nav-link px-2 py-1 font-medium {% if '/nfp' in request.path %}active text-pop-purple{% else %}text-gray-600 hover:text-pop-purple{% endif %}">
+                            📊 雇用統計
                         </a>
-                        <a href="/fed-speeches" class="px-3 py-2 rounded-md text-sm hover:bg-trader-border {% if request.path == '/fed-speeches' %}bg-trader-border text-white{% else %}text-gray-400{% endif %}">
-                            FRB発言
+                        <a href="/fed-speeches" class="nav-link px-2 py-1 font-medium {% if request.path == '/fed-speeches' %}active text-pop-blue{% else %}text-gray-600 hover:text-pop-blue{% endif %}">
+                            🦅 FRB発言
                         </a>
-                        <a href="/trades" class="px-3 py-2 rounded-md text-sm hover:bg-trader-border {% if request.path == '/trades' %}bg-trader-border text-white{% else %}text-gray-400{% endif %}">
-                            トレード履歴
+                        <a href="/vip-quotes" class="nav-link px-2 py-1 font-medium {% if request.path == '/vip-quotes' %}active text-pop-orange{% else %}text-gray-600 hover:text-pop-orange{% endif %}">
+                            🎩 要人発言
+                        </a>
+                        <a href="/trades" class="nav-link px-2 py-1 font-medium {% if request.path == '/trades' %}active text-pop-green{% else %}text-gray-600 hover:text-pop-green{% endif %}">
+                            💰 収支
                         </a>
                     </div>
                 </div>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm font-medium text-gray-500 bg-white/50 px-3 py-1 rounded-full">
                     {{ today if today else '' }}
                 </div>
+            </div>
+            <!-- モバイルナビ -->
+            <div class="md:hidden flex justify-around py-2 border-t border-gray-100">
+                <a href="/" class="text-center {% if request.path == '/' %}text-pop-pink{% else %}text-gray-500{% endif %}">
+                    <span class="text-xl">📅</span>
+                    <p class="text-xs">カレンダー</p>
+                </a>
+                <a href="/nfp" class="text-center {% if '/nfp' in request.path %}text-pop-purple{% else %}text-gray-500{% endif %}">
+                    <span class="text-xl">📊</span>
+                    <p class="text-xs">雇用統計</p>
+                </a>
+                <a href="/fed-speeches" class="text-center {% if request.path == '/fed-speeches' %}text-pop-blue{% else %}text-gray-500{% endif %}">
+                    <span class="text-xl">🦅</span>
+                    <p class="text-xs">FRB</p>
+                </a>
+                <a href="/vip-quotes" class="text-center {% if request.path == '/vip-quotes' %}text-pop-orange{% else %}text-gray-500{% endif %}">
+                    <span class="text-xl">🎩</span>
+                    <p class="text-xs">要人</p>
+                </a>
+                <a href="/trades" class="text-center {% if request.path == '/trades' %}text-pop-green{% else %}text-gray-500{% endif %}">
+                    <span class="text-xl">💰</span>
+                    <p class="text-xs">収支</p>
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- メインコンテンツ -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-6xl mx-auto px-4 py-8">
         {% block content %}{% endblock %}
     </main>
 
     <!-- フッター -->
-    <footer class="border-t border-trader-border mt-8 py-4">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            5000円ギャンブル専用 | 年1-2回の大勝ちを狙う
+    <footer class="mt-12 py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm">
+                🎯 5000円からはじめる経済指標トレード
+            </p>
+            <p class="text-gray-400 text-xs mt-1">
+                年1〜2回のビッグチャンスを狙おう！
+            </p>
         </div>
     </footer>
 

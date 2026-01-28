@@ -4,72 +4,98 @@
 
 {% block content %}
 <div class="space-y-8">
-    <!-- 次回NFPカウントダウン -->
+    <!-- ヒーローセクション：次回NFPカウントダウン -->
     {% if next_nfp %}
-    <div class="bg-gradient-to-r from-trader-blue/20 to-trader-green/20 rounded-lg p-6 border border-trader-border">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-lg text-gray-400">次回 雇用統計</h2>
-                <p class="text-3xl font-bold text-white mt-2">{{ next_nfp.date }}</p>
-                <p class="text-gray-400 mt-1">{{ next_nfp.month }} 分</p>
+    <div class="glass-card rounded-3xl p-8 shadow-lg overflow-hidden relative">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pop-pink/20 to-pop-purple/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div class="relative">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                    <p class="text-pop-purple font-bold text-sm tracking-wider mb-2">📊 NEXT NFP</p>
+                    <h1 class="text-4xl md:text-5xl font-black text-gray-800">{{ next_nfp.date }}</h1>
+                    <p class="text-gray-500 mt-2 text-lg">{{ next_nfp.month }} 分のデータ発表</p>
+                </div>
+                <div class="text-center bg-gradient-to-br from-pop-purple to-pop-pink rounded-2xl p-6 text-white shadow-lg">
+                    <p class="text-6xl md:text-7xl font-black">{{ next_nfp.days_until }}</p>
+                    <p class="text-white/80 font-medium">日後</p>
+                </div>
             </div>
-            <div class="text-right">
-                <p class="text-5xl font-bold text-trader-blue">{{ next_nfp.days_until }}</p>
-                <p class="text-gray-400">日後</p>
+            <div class="mt-6">
+                <a href="/nfp/{{ next_nfp.month }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-pop-purple to-pop-pink hover:from-pop-pink hover:to-pop-purple text-white font-bold px-6 py-3 rounded-full shadow-lg transition-all hover:scale-105">
+                    詳細をチェック
+                    <span>→</span>
+                </a>
             </div>
-        </div>
-        <div class="mt-4">
-            <a href="/nfp/{{ next_nfp.month }}" class="inline-block bg-trader-blue hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
-                詳細を見る →
-            </a>
         </div>
     </div>
     {% endif %}
 
-    <!-- 今月・来月のイベント -->
-    <div>
-        <h2 class="text-xl font-bold text-white mb-4">📅 今後のイベント</h2>
-        <div class="bg-trader-card rounded-lg border border-trader-border overflow-hidden">
-            <table class="w-full">
-                <thead class="bg-trader-border/50">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-sm text-gray-400">日付</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-400">イベント</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-400">詳細</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-400">重要度</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-trader-border">
-                    {% for event in events %}
-                    <tr class="hover:bg-trader-border/30">
-                        <td class="px-4 py-3">
-                            <span class="{% if event.date == today %}text-trader-green font-bold{% else %}text-white{% endif %}">
-                                {{ event.date }}
-                            </span>
-                            {% if event.date == today %}
-                            <span class="ml-2 text-xs bg-trader-green/20 text-trader-green px-2 py-0.5 rounded">TODAY</span>
-                            {% endif %}
-                        </td>
-                        <td class="px-4 py-3">
-                            {% if event.type == 'NFP' %}
-                            <span class="inline-flex items-center px-2 py-1 rounded bg-blue-500/20 text-trader-blue text-sm">
-                                📊 雇用統計
-                            </span>
-                            {% elif event.type == 'CPI' %}
-                            <span class="inline-flex items-center px-2 py-1 rounded bg-yellow-500/20 text-trader-yellow text-sm">
-                                📈 CPI
-                            </span>
-                            {% elif event.type == 'FOMC' %}
-                            <span class="inline-flex items-center px-2 py-1 rounded bg-red-500/20 text-trader-red text-sm">
-                                🦅 FOMC
-                            </span>
-                            {% elif event.type == 'BOJ' %}
-                            <span class="inline-flex items-center px-2 py-1 rounded bg-green-500/20 text-trader-green text-sm">
-                                🏯 日銀
-                            </span>
-                            {% endif %}
-                        </td>
-                        <td class="px-4 py-3 text-gray-400 text-sm">
+    <!-- クイックリンク -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="/nfp" class="glass-card rounded-2xl p-5 hover:shadow-lg transition-all bounce-hover group">
+            <span class="text-4xl block mb-2 group-hover:scale-110 transition-transform">📊</span>
+            <h3 class="font-bold text-gray-800">雇用統計</h3>
+            <p class="text-gray-500 text-sm mt-1">予想・結果</p>
+        </a>
+        <a href="/fed-speeches" class="glass-card rounded-2xl p-5 hover:shadow-lg transition-all bounce-hover group">
+            <span class="text-4xl block mb-2 group-hover:scale-110 transition-transform">🦅</span>
+            <h3 class="font-bold text-gray-800">FRB発言</h3>
+            <p class="text-gray-500 text-sm mt-1">タカ・ハト派</p>
+        </a>
+        <a href="/vip-quotes" class="glass-card rounded-2xl p-5 hover:shadow-lg transition-all bounce-hover group">
+            <span class="text-4xl block mb-2 group-hover:scale-110 transition-transform">🎩</span>
+            <h3 class="font-bold text-gray-800">要人発言</h3>
+            <p class="text-gray-500 text-sm mt-1">バフェット等</p>
+        </a>
+        <a href="/trades" class="glass-card rounded-2xl p-5 hover:shadow-lg transition-all bounce-hover group">
+            <span class="text-4xl block mb-2 group-hover:scale-110 transition-transform">💰</span>
+            <h3 class="font-bold text-gray-800">収支</h3>
+            <p class="text-gray-500 text-sm mt-1">トレード記録</p>
+        </a>
+    </div>
+
+    <!-- 今後のイベント -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <h2 class="text-xl font-black text-gray-800 mb-4 flex items-center gap-2">
+            <span class="text-2xl">📅</span>
+            今後のイベント
+        </h2>
+        <div class="space-y-3">
+            {% for event in events %}
+            <div class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors {% if event.date == today %}bg-pop-yellow/10 border-2 border-pop-yellow{% endif %}">
+                <!-- 日付 -->
+                <div class="text-center min-w-[60px]">
+                    <p class="text-xs text-gray-400">{{ event.date[:7] }}</p>
+                    <p class="text-2xl font-black {% if event.date == today %}text-pop-yellow{% else %}text-gray-700{% endif %}">
+                        {{ event.date[8:] }}
+                    </p>
+                    {% if event.date == today %}
+                    <span class="text-xs bg-pop-yellow text-white px-2 py-0.5 rounded-full font-bold">TODAY</span>
+                    {% endif %}
+                </div>
+
+                <!-- イベント情報 -->
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        {% if event.type == 'NFP' %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-pop-purple to-pop-blue text-white text-sm font-bold">
+                            📊 雇用統計
+                        </span>
+                        {% elif event.type == 'CPI' %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-pop-yellow to-pop-orange text-white text-sm font-bold">
+                            📈 CPI
+                        </span>
+                        {% elif event.type == 'FOMC' %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-pop-red to-pop-pink text-white text-sm font-bold">
+                            🦅 FOMC
+                        </span>
+                        {% elif event.type == 'BOJ' %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-pop-green to-pop-cyan text-white text-sm font-bold">
+                            🏯 日銀
+                        </span>
+                        {% endif %}
+
+                        <span class="text-gray-500 text-sm">
                             {% if event.type == 'NFP' %}
                             {{ event.month }} 分
                             {% elif event.type == 'CPI' %}
@@ -79,35 +105,62 @@
                             {% elif event.type == 'BOJ' %}
                             {% if event.outlook %}展望レポート{% else %}声明のみ{% endif %}
                             {% endif %}
-                        </td>
-                        <td class="px-4 py-3">
-                            {% if event.type in ['NFP', 'FOMC', 'BOJ'] %}
-                            <span class="text-trader-red">★★★</span>
-                            {% else %}
-                            <span class="text-trader-yellow">★★☆</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 重要度 -->
+                <div class="text-right">
+                    {% if event.type in ['NFP', 'FOMC', 'BOJ'] %}
+                    <span class="text-pop-red text-lg">★★★</span>
+                    {% else %}
+                    <span class="text-pop-yellow text-lg">★★☆</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- クイックリンク -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="/nfp" class="bg-trader-card border border-trader-border rounded-lg p-6 hover:border-trader-blue transition-colors">
-            <h3 class="text-lg font-bold text-white">📊 雇用統計</h3>
-            <p class="text-gray-400 text-sm mt-2">予想・結果・FRB発言をまとめて確認</p>
-        </a>
-        <a href="/fed-speeches" class="bg-trader-card border border-trader-border rounded-lg p-6 hover:border-trader-blue transition-colors">
-            <h3 class="text-lg font-bold text-white">🦅 FRB発言</h3>
-            <p class="text-gray-400 text-sm mt-2">タカ派/ハト派の発言を時系列で</p>
-        </a>
-        <a href="/trades" class="bg-trader-card border border-trader-border rounded-lg p-6 hover:border-trader-blue transition-colors">
-            <h3 class="text-lg font-bold text-white">💰 トレード履歴</h3>
-            <p class="text-gray-400 text-sm mt-2">5000円トレードの収支を記録</p>
-        </a>
+    <!-- 最新の要人発言プレビュー -->
+    <div class="glass-card rounded-3xl p-6 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-black text-gray-800 flex items-center gap-2">
+                <span class="text-2xl">🎩</span>
+                最新の要人発言
+            </h2>
+            <a href="/vip-quotes" class="text-pop-purple font-bold text-sm hover:underline">
+                すべて見る →
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-purple/5 to-pop-blue/5 border border-pop-purple/20">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-3xl">🧙‍♂️</span>
+                    <div>
+                        <p class="font-bold text-gray-800">ウォーレン・バフェット</p>
+                        <p class="text-xs text-gray-400">2026-01-25 ダボス会議</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm">「現在の市場は過熱気味。現金ポジションを増やしている」</p>
+                <span class="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-pop-yellow/20 text-pop-yellow font-bold">
+                    ⚠️ 慎重姿勢
+                </span>
+            </div>
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-red/5 to-pop-pink/5 border border-pop-red/20">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-3xl">🏛️</span>
+                    <div>
+                        <p class="font-bold text-gray-800">ジェローム・パウエル</p>
+                        <p class="text-xs text-gray-400">2026-01-28 FOMC後会見</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 text-sm">「インフレ目標達成までは慎重姿勢を維持。利下げ圧力には屈しない」</p>
+                <span class="inline-block mt-2 text-xs px-2 py-1 rounded-full bg-pop-red/20 text-pop-red font-bold">
+                    🦅 タカ派
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
