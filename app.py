@@ -133,6 +133,7 @@ def nfp_page(month=None):
     """雇用統計ページ"""
     nfp_data = load_json('nfp_history.json')
     fed_speeches = load_json('fed_speeches.json')
+    scenarios = load_json('nfp_scenarios.json')
 
     if month is None:
         # 次回の雇用統計月を表示
@@ -169,6 +170,9 @@ def nfp_page(month=None):
             if prev_nfp_date <= speech["date"] <= nfp_schedule["date"]:
                 related_speeches.append(speech)
 
+    # シナリオ分析（あれば）
+    scenario = scenarios.get(month)
+
     # 全NFPリスト
     all_nfp = SCHEDULE_2026["nfp"]
 
@@ -177,6 +181,7 @@ def nfp_page(month=None):
                          schedule=nfp_schedule,
                          data=month_data,
                          speeches=related_speeches,
+                         scenario=scenario,
                          all_nfp=all_nfp,
                          nfp_history=nfp_data)
 

@@ -219,6 +219,106 @@
         </div>
     </div>
 
+    <!-- 市場予想・シナリオ分析 -->
+    {% if scenario %}
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-purple/30 bg-gradient-to-br from-pop-purple/5 to-pop-blue/5">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <span class="text-xl">🎯</span>
+                市場予想・シナリオ分析
+            </h2>
+            <span class="text-xs bg-gradient-to-r from-pop-purple to-pop-blue text-white px-3 py-1 rounded-full font-bold">
+                ✨ LINE限定
+            </span>
+        </div>
+
+        <!-- 予想のポイント -->
+        <div class="mb-6">
+            <h3 class="font-bold text-gray-700 mb-3">📊 予想のポイント</h3>
+            <div class="p-4 rounded-2xl bg-white/50">
+                <p class="text-gray-700">{{ scenario.forecast_summary }}</p>
+            </div>
+        </div>
+
+        <!-- シナリオ別分析 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <!-- 上振れシナリオ -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-green/10 to-pop-cyan/10 border-2 border-pop-green/30">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-2xl">📈</span>
+                    <h4 class="font-bold text-pop-green">上振れシナリオ</h4>
+                </div>
+                <p class="text-gray-500 text-sm mb-2">{{ scenario.upside.condition }}</p>
+                <div class="space-y-2">
+                    <p class="text-gray-700"><span class="font-bold">想定値動き:</span> {{ scenario.upside.price_action }}</p>
+                    <p class="text-gray-700"><span class="font-bold">目標:</span> {{ scenario.upside.target }}</p>
+                </div>
+                <div class="mt-3 p-2 rounded-lg bg-pop-green/20">
+                    <p class="text-pop-green text-sm font-medium">💡 {{ scenario.upside.strategy }}</p>
+                </div>
+            </div>
+
+            <!-- 下振れシナリオ -->
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-pop-red/10 to-pop-pink/10 border-2 border-pop-red/30">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-2xl">📉</span>
+                    <h4 class="font-bold text-pop-red">下振れシナリオ</h4>
+                </div>
+                <p class="text-gray-500 text-sm mb-2">{{ scenario.downside.condition }}</p>
+                <div class="space-y-2">
+                    <p class="text-gray-700"><span class="font-bold">想定値動き:</span> {{ scenario.downside.price_action }}</p>
+                    <p class="text-gray-700"><span class="font-bold">目標:</span> {{ scenario.downside.target }}</p>
+                </div>
+                <div class="mt-3 p-2 rounded-lg bg-pop-red/20">
+                    <p class="text-pop-red text-sm font-medium">💡 {{ scenario.downside.strategy }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 私の見解 -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-pop-yellow/10 to-pop-orange/10 border-2 border-pop-yellow/30">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-xl">🤔</span>
+                <h4 class="font-bold text-pop-orange">私の見解</h4>
+            </div>
+            <p class="text-gray-700">{{ scenario.my_view }}</p>
+            {% if scenario.my_bias %}
+            <div class="mt-3 flex items-center gap-2">
+                <span class="font-bold text-gray-600">バイアス:</span>
+                {% if scenario.my_bias == 'bullish' %}
+                <span class="px-3 py-1 rounded-full bg-pop-green/20 text-pop-green font-bold">📈 ドル買い目線</span>
+                {% elif scenario.my_bias == 'bearish' %}
+                <span class="px-3 py-1 rounded-full bg-pop-red/20 text-pop-red font-bold">📉 ドル売り目線</span>
+                {% else %}
+                <span class="px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-bold">➖ 中立・様子見</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Web上の見方 -->
+        {% if scenario.web_consensus %}
+        <div class="mt-4 p-4 rounded-2xl bg-white/50">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-xl">🌐</span>
+                <h4 class="font-bold text-gray-700">Web上の見方まとめ</h4>
+            </div>
+            <div class="space-y-2">
+                {% for source in scenario.web_consensus %}
+                <div class="p-2 rounded-lg bg-gray-50 flex items-start gap-2">
+                    <span class="text-gray-400">•</span>
+                    <div>
+                        <span class="text-gray-500 text-xs">{{ source.name }}:</span>
+                        <p class="text-gray-700 text-sm">{{ source.view }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <!-- トレード戦略（プレミアムコンテンツ） -->
     <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-yellow/30 bg-gradient-to-br from-pop-yellow/5 to-pop-orange/5">
         <div class="flex items-center justify-between mb-4">
