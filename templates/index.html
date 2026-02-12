@@ -20,7 +20,23 @@
                     <p class="text-white/80 font-medium">日後</p>
                 </div>
             </div>
-            <div class="mt-6">
+            {% if next_prediction %}
+            <div class="mt-4 p-4 rounded-2xl {% if next_prediction.direction == 'BUY' %}bg-pop-green/10 border border-pop-green/30{% elif next_prediction.direction == 'SELL' %}bg-pop-red/10 border border-pop-red/30{% else %}bg-pop-yellow/10 border border-pop-yellow/30{% endif %}">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">
+                        {% if next_prediction.direction == 'BUY' %}📈{% elif next_prediction.direction == 'SELL' %}📉{% else %}⏸️{% endif %}
+                    </span>
+                    <div>
+                        <p class="font-black text-xl {% if next_prediction.direction == 'BUY' %}text-pop-green{% elif next_prediction.direction == 'SELL' %}text-pop-red{% else %}text-pop-yellow{% endif %}">
+                            {% if next_prediction.direction == 'BUY' %}BUY（ドル買い）{% elif next_prediction.direction == 'SELL' %}SELL（ドル売り）{% else %}NEUTRAL（様子見）{% endif %}
+                            <span class="text-sm font-bold ml-2">信頼度 {{ next_prediction.confidence }}%</span>
+                        </p>
+                        <p class="text-gray-600 text-sm mt-1">{{ next_prediction.rationale }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="mt-4">
                 <a href="/nfp/{{ next_nfp.month }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-pop-purple to-pop-pink hover:from-pop-pink hover:to-pop-purple text-white font-bold px-6 py-3 rounded-full shadow-lg transition-all hover:scale-105">
                     詳細をチェック
                     <span>→</span>

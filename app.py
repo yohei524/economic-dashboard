@@ -121,9 +121,18 @@ def index():
     # 直近10件に制限
     events = events[:10]
 
+    # 次回NFPの予測シグナルを取得
+    next_prediction = None
+    if next_nfp:
+        scenarios = load_json('nfp_scenarios.json')
+        scenario = scenarios.get(next_nfp["month"])
+        if scenario and "prediction" in scenario:
+            next_prediction = scenario["prediction"]
+
     return render_template('index.html',
                          today=today.strftime("%Y-%m-%d"),
                          next_nfp=next_nfp,
+                         next_prediction=next_prediction,
                          events=events)
 
 

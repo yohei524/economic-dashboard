@@ -219,6 +219,46 @@
         </div>
     </div>
 
+    <!-- 予測シグナル -->
+    {% if scenario and scenario.prediction %}
+    {% set pred = scenario.prediction %}
+    <div class="glass-card rounded-3xl p-6 shadow-lg border-2 {% if pred.direction == 'BUY' %}border-pop-green/40 bg-gradient-to-br from-pop-green/10 to-pop-cyan/10{% elif pred.direction == 'SELL' %}border-pop-red/40 bg-gradient-to-br from-pop-red/10 to-pop-pink/10{% else %}border-pop-yellow/40 bg-gradient-to-br from-pop-yellow/10 to-pop-orange/10{% endif %}">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-2xl">🎯</span>
+                    <h2 class="text-lg font-bold text-gray-800">今回の予測</h2>
+                    <span class="text-xs px-3 py-1 rounded-full {% if pred.direction == 'BUY' %}bg-pop-green/20 text-pop-green{% elif pred.direction == 'SELL' %}bg-pop-red/20 text-pop-red{% else %}bg-pop-yellow/20 text-pop-yellow{% endif %} font-bold">
+                        信頼度 {{ pred.confidence }}%
+                    </span>
+                </div>
+                <p class="text-gray-600 text-sm">{{ pred.rationale }}</p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-medium">⏰ {{ pred.entry_timing }}</span>
+                    <span class="text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-medium">📊 {{ pred.key_level }}</span>
+                </div>
+            </div>
+            <div class="text-center p-6 rounded-2xl {% if pred.direction == 'BUY' %}bg-pop-green/20{% elif pred.direction == 'SELL' %}bg-pop-red/20{% else %}bg-pop-yellow/20{% endif %}">
+                <p class="text-5xl md:text-6xl font-black {% if pred.direction == 'BUY' %}text-pop-green{% elif pred.direction == 'SELL' %}text-pop-red{% else %}text-pop-yellow{% endif %}">
+                    {% if pred.direction == 'BUY' %}📈{% elif pred.direction == 'SELL' %}📉{% else %}⏸️{% endif %}
+                </p>
+                <p class="text-2xl font-black mt-2 {% if pred.direction == 'BUY' %}text-pop-green{% elif pred.direction == 'SELL' %}text-pop-red{% else %}text-pop-yellow{% endif %}">
+                    {% if pred.direction == 'BUY' %}BUY{% elif pred.direction == 'SELL' %}SELL{% else %}NEUTRAL{% endif %}
+                </p>
+                <p class="text-sm text-gray-500 mt-1">
+                    {% if pred.direction == 'BUY' %}ドル買い{% elif pred.direction == 'SELL' %}ドル売り{% else %}様子見{% endif %}
+                </p>
+            </div>
+        </div>
+        <!-- 信頼度バー -->
+        <div class="mt-4">
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="h-2 rounded-full {% if pred.direction == 'BUY' %}bg-pop-green{% elif pred.direction == 'SELL' %}bg-pop-red{% else %}bg-pop-yellow{% endif %}" style="width: {{ pred.confidence }}%"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- 市場予想・シナリオ分析 -->
     {% if scenario %}
     <div class="glass-card rounded-3xl p-6 shadow-lg border-2 border-pop-purple/30 bg-gradient-to-br from-pop-purple/5 to-pop-blue/5">
